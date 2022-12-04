@@ -2,6 +2,7 @@ package jp.ac.jec.cm0146.jecnote.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import jp.ac.jec.cm0146.jecnote.databinding.ActivityUserIdentificationBinding;
@@ -17,6 +18,19 @@ public class UserIdentificationActivity extends AppCompatActivity {
         binding = ActivityUserIdentificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setListener();
 
+    }
+
+    private void setListener() {
+        binding.BtnTeacher.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), TeacherIdentificationActivity.class);
+            startActivity(intent);
+        });
+
+        binding.BtnStudent.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), StudentIdentificationActivity.class);
+            startActivity(intent);
+        });
     }
 }

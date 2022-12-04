@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -51,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        preferenceManager = new PreferenceManager(getApplicationContext());
+
         mAuth = FirebaseAuth.getInstance();
         mAuth.setLanguageCode("ja");
 
@@ -58,9 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        preferenceManager = new PreferenceManager(getApplicationContext());
-
-        setListener();
+//        setListener();
 
     }
 
@@ -76,20 +77,26 @@ public class LoginActivity extends AppCompatActivity {
     // signIn
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, RC_SIGN_IN);// 非推奨だけど、、、
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        binding.googleSignInButton.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressSpaceTop.setVisibility(View.VISIBLE);
+        binding.progressSpaceBottom.setVisibility(View.VISIBLE);
+
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+            Log.i("fuga", "101");
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                showToast("成功:" + account.getId() + "\n" + account.getDisplayName() + "\n" + account.getFamilyName() + "\n" + account.getEmail());
+//                showToast("成功:" + account.getId() + "\n" + account.getDisplayName() + "\n" + account.getFamilyName() + "\n" + account.getEmail());
 
 
 
@@ -100,11 +107,17 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken(), account.getDisplayName(), String.valueOf(account.getPhotoUrl()), account.getEmail());
 
             } catch (ApiException e) {
+                binding.googleSignInButton.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.progressSpaceTop.setVisibility(View.GONE);
+                binding.progressSpaceBottom.setVisibility(View.GONE);
+
                 // Google Sign In failed, update UI appropriately
                 showToast("Google sign in failed" + e);
             }
         }
     }
+
 
     private void firebaseAuthWithGoogle(String idToken, String userName, String userImage, String userEmail) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
@@ -119,6 +132,8 @@ public class LoginActivity extends AppCompatActivity {
                             // FireStoreのインスタンス取得
                             database = FirebaseFirestore.getInstance();
 
+                            Log.i("comp", "userEmail " + userEmail);
+
                             // 別端末orアンインストール後に再度アプリログインした？(firestoreにemailがおんなじユーザある？）
                             database.collection(Constants.KEY_COLLECTION_USER)
                                     .whereEqualTo(Constants.KEY_USER_EMAIL, userEmail)
@@ -132,6 +147,32 @@ public class LoginActivity extends AppCompatActivity {
                                                 preferenceManager.putString(Constants.KEY_USER_NAME, documentSnapshot.getString(Constants.KEY_USER_NAME));
                                                 preferenceManager.putString(Constants.KEY_USER_IMAGE, documentSnapshot.getString(Constants.KEY_USER_IMAGE));
                                                 preferenceManager.putString(Constants.KEY_USER_EMAIL, documentSnapshot.getString(Constants.KEY_USER_EMAIL));
+                                                preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
+
+
+                                                Log.i("pray", "アカウントあるかつ再インストールはここに入っていてほしい");
+
+                                                preferenceManager.putBoolean(Constants.KEY_LOGINED, true);
+
+                                                if(documentSnapshot.getBoolean(Constants.IS_TEACHER) != null) {
+                                                    preferenceManager.putBoolean(Constants.IS_TEACHER, documentSnapshot.getBoolean(Constants.IS_TEACHER));
+                                                }
+
+
+
+                                                binding.googleSignInButton.setVisibility(View.GONE);
+                                                binding.progressBar.setVisibility(View.GONE);
+                                                binding.progressSpaceTop.setVisibility(View.GONE);
+                                                binding.progressSpaceBottom.setVisibility(View.GONE);
+
+                                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+                                                finish();
+
+
+
+
                                             } else {// アカウント新規登録
 
 
@@ -156,20 +197,26 @@ public class LoginActivity extends AppCompatActivity {
                                                             showToast(exception.getMessage());
                                                         });
 
-                                                showToast("else");
+                                                binding.googleSignInButton.setVisibility(View.GONE);
+                                                binding.progressBar.setVisibility(View.GONE);
+                                                binding.progressSpaceTop.setVisibility(View.GONE);
+                                                binding.progressSpaceBottom.setVisibility(View.GONE);
+
+                                                Intent intent = new Intent(LoginActivity.this, UserIdentificationActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+                                                finish();
+
+
 
                                             }
                                         }
                                     });
 
-
-
                             // preferenceに
                             preferenceManager.putString(Constants.KEY_AUTH_TOKEN, idToken);
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -184,33 +231,44 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // TODO: 別端末や、アンインストールした際のおんなじアカウントにログインする方法を！signin処理
-
         // ログインしたことがあるか？（同じ端末でアプリを開き直した時の）
-        if(preferenceManager.getString(Constants.KEY_AUTH_TOKEN) != null) {
+        if((preferenceManager.getBoolean(Constants.KEY_LOGINED) != null) && preferenceManager.getBoolean(Constants.KEY_LOGINED)) {
+            Log.i("fuga", "214");
             // FireStoreに登録するための準備
             database = FirebaseFirestore.getInstance();
-            HashMap<String , Object > map = new HashMap<>();
+            HashMap<String, Object> map = new HashMap<>();
 
             // アカウントの更新を確認する
             String userName = preferenceManager.getString(Constants.KEY_USER_NAME);
             String userImage = preferenceManager.getString(Constants.KEY_USER_IMAGE);
 
-            if(userName.equals(mAuth.getCurrentUser().getDisplayName())) {// 名前の変更があれば、
-                // preferenceに再登録
-                preferenceManager.putString(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
-                // firestoreに再登録
-                map.put(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
-            }
-            if(userImage.equals(mAuth.getCurrentUser().getPhotoUrl())) {// アイコンの変更があれば、
-                preferenceManager.putString(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
-                map.put(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
+
+            Log.i("fuga", "238");
+            // この端末でログインしていたならば、MainActivityに遷移
+
+            if(mAuth.getCurrentUser() != null) {
+
+                if (userName.equals(mAuth.getCurrentUser().getDisplayName())) {// 名前の変更があれば、
+                    Log.i("fuga", "224");
+                    // preferenceに再登録
+                    preferenceManager.putString(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
+                    // firestoreに再登録
+                    map.put(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
+                }
+                if (userImage.equals(mAuth.getCurrentUser().getPhotoUrl())) {// アイコンの変更があれば、
+                    Log.i("fuga", "231");
+                    preferenceManager.putString(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
+                    map.put(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
+                }
             }
 
+
+            Log.i("fuga", "241");
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            finish();
-
         }
+
+        setListener();
     }
 }

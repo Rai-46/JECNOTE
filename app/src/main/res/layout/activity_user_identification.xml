@@ -5,6 +5,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".activities.UserIdentificationActivity">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textMenu"
+        android:textSize="30sp"
+        android:text="あなたは..." />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+<!--        TODO ボタンは画像つき、または角丸デザインなどに変更する！-->
+
+        <Button
+            android:id="@+id/BtnTeacher"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1.8"
+            android:padding="10dp"
+            android:text="教員"
+            android:textSize="20sp"
+            android:backgroundTint="@color/MainColor"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+
+
+        <Button
+            android:id="@+id/BtnStudent"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1.8"
+            android:padding="10dp"
+            android:text="学生"
+            android:textSize="20sp"
+            android:backgroundTint="@color/MainColor"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="3" />
+
 
 </LinearLayout>

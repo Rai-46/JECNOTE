@@ -8,8 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 <!--    テキストカラー-->
-    <color name="textMenu">#FF543804</color>
+    <color name="textMenu">#FF233B6C</color>
     <color name="textValue">#FF333333</color>
 <!--    メインカラー-->
-    <color name="MainColor">#FF23C74F</color>
+    <color name="MainColor">#4ADF72</color>
+    <color name="StatusColor">#FF23C74F</color>
+    <color name="SecondColor">#228B22</color>
+
+<!--    メイン画面のカード-->
+    <color name="MenuStrokeColor">#FF20B2AA</color>
 </resources>

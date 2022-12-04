@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">JECNOTE</string>
+
+    <string-array name="subject">
+        <item>AD</item>
+        <item>AU</item>
+        <item>AV</item>
+        <item>CI</item>
+        <item>CU</item>
+        <item>CR</item>
+        <item>AC</item>
+        <item>AR</item>
+        <item>AG</item>
+        <item>JN</item>
+        <item>JZ</item>
+        <item>JY</item>
+        <item>CM</item>
+        <item>AW</item>
+        <item>CA</item>
+        <item>JL</item>
+        <item>CC</item>
+        <item>EO</item>
+        <item>KZ</item>
+        <item>KJ</item>
+        <item>KK</item>
+
+        <item>YN</item>
+        <item>YC</item>
+        <item>YJ</item>
+        <item>YK</item>
+    </string-array>
 </resources>

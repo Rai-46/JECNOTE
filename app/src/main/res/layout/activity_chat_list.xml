@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bgcolor"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.ChatListActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
@@ -16,17 +15,25 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
+            <ImageButton
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_baseline_arrow_back_24"
+                tools:ignore="ContentDescription"/>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
                 android:textSize="25sp"
                 android:layout_gravity="center"
-                android:text="メインメニュー"
+                android:text="チャット"
                 android:textColor="@color/white"/>
 
             <View
@@ -35,26 +42,18 @@
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/sendChatActivity"
+                android:id="@+id/searchUsers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginEnd="20dp"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_outline_chat_bubble_outline_24"
+                android:src="@drawable/ic_baseline_person_add_24"
                 tools:ignore="ContentDescription"/>
 
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
-
-
-    <ListView
-        android:id="@+id/menuItemList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:dividerHeight="20sp"
-        android:divider="@null"/>
 
 </LinearLayout>
