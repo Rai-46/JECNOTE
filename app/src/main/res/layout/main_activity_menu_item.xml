@@ -27,6 +27,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:padding="10dp"
+            android:fontFamily="@font/zenmarugothic_medium"
             android:text="TextView"
             android:textColor="@color/textMenu"
             android:textSize="20sp"

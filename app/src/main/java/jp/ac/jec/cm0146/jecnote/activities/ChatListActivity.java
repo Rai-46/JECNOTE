@@ -2,6 +2,7 @@ package jp.ac.jec.cm0146.jecnote.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -47,6 +48,11 @@ public class ChatListActivity extends AppCompatActivity {
 
             });
         }
+
+        binding.searchUsers.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), SearchUserActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setToken() {

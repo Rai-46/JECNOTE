@@ -14,6 +14,9 @@
         <!-- Customize your theme here. -->
         <!-- TextColor       -->
 
+        <!-- CustomFont -->
+<!--        <item name="android:fontFamily">@font/ZenMaruGothic_Medium</item>-->
+
 
     </style>
 

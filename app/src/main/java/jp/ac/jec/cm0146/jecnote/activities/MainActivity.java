@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     private PreferenceManager preferenceManager;
 
+    private static final int MENU_GUIDE = 1;
+    private static final int MENU_NEWS = 2;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,16 +58,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     }
 
     private void setList() {
-        ArrayList<MenuItems> items = new ArrayList<MenuItems>(Arrays.asList(
-                new MenuItems().setMenuTitle("学園生活ガイド").setMenuImage(R.drawable.lifeguide_2019),
-                new MenuItems().setMenuTitle("学校からの連絡")
+        ArrayList<MenuItems> items = new ArrayList<>(Arrays.asList(
+                new MenuItems().setId(MENU_GUIDE).setMenuTitle("学園生活ガイド").setMenuImage(R.drawable.lifeguide_2019),
+                new MenuItems().setId(MENU_NEWS).setMenuTitle("学校からの連絡")
         ));
         MenuListAdapter adapter = new MenuListAdapter(getApplicationContext(), this);
         for (MenuItems data: items) {
             adapter.add(data);
         }
         binding.menuItemList.setAdapter(adapter);
-
 
     }
 
@@ -77,11 +80,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     @Override
     public void onTapItem(MenuItems menuItems) {
         // Intentで学園生活ガイドViewに遷移
-        Log.i("intent", "onTapItem");
+        if(menuItems.getId() == MENU_GUIDE) {
+            Intent intent = new Intent(getApplicationContext(), SchoolGuideActivity.class);
+            startActivity(intent);
+        }
+        // Intentで学校連絡Viewに遷移
+        if(menuItems.getId() == MENU_NEWS) {
+            Intent intent = new Intent(getApplicationContext(), SchoolNewsActivity.class);
+            startActivity(intent);
+        }
     }
 
 
     // URLから画像をImageViewに追加する
+    // TODO AsyncTaskが非推奨だから、余裕があれば直す！
     public class DownloadUserImage extends AsyncTask<String, Void, Bitmap> {
         protected ImageView bmImage;
 
@@ -93,10 +105,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
         @Override
         public Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
+            String urlDisplay = urls[0];
             Bitmap mIcon11 = null;
             try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
+                InputStream in = new java.net.URL(urlDisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());

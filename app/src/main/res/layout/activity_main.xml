@@ -27,6 +27,7 @@
                 android:textSize="25sp"
                 android:layout_gravity="center"
                 android:text="メインメニュー"
+                android:fontFamily="@font/zenmarugothic_medium"
                 android:textColor="@color/white"/>
 
             <View

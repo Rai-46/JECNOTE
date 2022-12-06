@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/textMenu"
         android:textSize="30sp"
+        android:fontFamily="@font/zenmarugothic_medium"
         android:text="あなたは..." />
 
     <View
@@ -40,6 +41,7 @@
             android:layout_weight="1.8"
             android:padding="10dp"
             android:text="教員"
+            android:fontFamily="@font/zenmarugothic_medium"
             android:textSize="20sp"
             android:backgroundTint="@color/MainColor"/>
 
@@ -56,6 +58,7 @@
             android:layout_weight="1.8"
             android:padding="10dp"
             android:text="学生"
+            android:fontFamily="@font/zenmarugothic_medium"
             android:textSize="20sp"
             android:backgroundTint="@color/MainColor"/>
 

@@ -13,6 +13,9 @@
         <entry key="app/src/main/res/layout/activity_chat_list.xml" value="0.22672424316406253" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1996337890625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.27355072463768115" />
+        <entry key="app/src/main/res/layout/activity_school_guide.xml" value="0.24003623188405798" />
+        <entry key="app/src/main/res/layout/activity_school_news.xml" value="0.17726157368093298" />
+        <entry key="app/src/main/res/layout/activity_search_user.xml" value="0.2860946655273438" />
         <entry key="app/src/main/res/layout/activity_student_identification.xml" value="0.23486531575520841" />
         <entry key="app/src/main/res/layout/activity_teacher_identification.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_user_identification.xml" value="0.17341515768905225" />
