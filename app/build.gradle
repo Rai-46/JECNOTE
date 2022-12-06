@@ -52,8 +52,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:20.0.5'
     implementation 'com.google.firebase:firebase-analytics'
 
-    //materialDesign
-//    implementation "androidx.compose.material3:material3:1.1.0-alpha01"
-//    implementation "androidx.compose.material3:material3-window-size-class:1.1.0-alpha01"
-//    implementation "androidx.compose.material:material:1.4.0-alpha01"
+
+    // Library ライブラリなので、宣言文等を載せなきゃいけないかな？
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }
