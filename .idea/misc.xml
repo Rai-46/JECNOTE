@@ -3,12 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../layout/custom_preview.xml" value="0.13677536231884058" />
         <entry key="../../../../Library/Android/sdk/platforms/android-32/data/res/layout/simple_list_item_1.xml" value="0.16927083333333334" />
         <entry key="app/src/main/res/drawable-v24/bgcolor.xml" value="0.143" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.178" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.178" />
         <entry key="app/src/main/res/drawable/ic_outline_mark_chat_unread_24.xml" value="0.178" />
         <entry key="app/src/main/res/drawable/main_menu_background.xml" value="0.178" />
+        <entry key="app/src/main/res/drawable/user_icon_background.xml" value="0.121" />
         <entry key="app/src/main/res/font/zenmarugothic_medium.xml" value="0.1984375" />
         <entry key="app/src/main/res/layout/activity_chat_list.xml" value="0.22672424316406253" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1996337890625" />
@@ -20,6 +22,7 @@
         <entry key="app/src/main/res/layout/activity_teacher_identification.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_user_identification.xml" value="0.17341515768905225" />
         <entry key="app/src/main/res/layout/main_activity_menu_item.xml" value="0.14281816387282353" />
+        <entry key="app/src/main/res/layout/studentuser_list_item.xml" value="0.25" />
       </map>
     </option>
   </component>

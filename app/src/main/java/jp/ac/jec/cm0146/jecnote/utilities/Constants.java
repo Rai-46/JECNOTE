@@ -14,4 +14,7 @@ public class Constants {
     public static final String USER_FCM_TOKEN = "fcmToken";
 
     public static final String IS_TEACHER = "isTeacher";
+    public static final String WHICH_SELECT = "whichSelect";
+    public static final String SELECTED_TEACHER = "teacher";
+    public static final String SELECTED_STUDENT = "student";
 }

@@ -46,8 +46,56 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/identificationPassword_layout"
+        style="?attr/textInputOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchFromSchoolID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="学籍番号"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ListView
+        android:id="@+id/studentUserList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:dividerHeight="20sp"
+        android:divider="@null"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textError"
+            android:textSize="18sp"
+            android:fontFamily="@font/zenmarugothic_medium"
+            android:visibility="gone"/>
+
+
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

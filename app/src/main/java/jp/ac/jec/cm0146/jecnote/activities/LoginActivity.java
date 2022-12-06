@@ -99,11 +99,6 @@ public class LoginActivity extends AppCompatActivity {
 //                showToast("成功:" + account.getId() + "\n" + account.getDisplayName() + "\n" + account.getFamilyName() + "\n" + account.getEmail());
 
 
-
-//                preferenceManager.putString(Constants.KEY_USER_NAME, account.getDisplayName());
-//                preferenceManager.putString(Constants.KEY_USER_IMAGE, String.valueOf(account.getPhotoUrl()));
-//                preferenceManager.putString(Constants.KEY_USER_EMAIL, account.getEmail());
-
                 firebaseAuthWithGoogle(account.getIdToken(), account.getDisplayName(), String.valueOf(account.getPhotoUrl()), account.getEmail());
 
             } catch (ApiException e) {
@@ -154,16 +149,30 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 preferenceManager.putBoolean(Constants.KEY_LOGINED, true);
 
-                                                if(documentSnapshot.getBoolean(Constants.IS_TEACHER) != null) {
-                                                    preferenceManager.putBoolean(Constants.IS_TEACHER, documentSnapshot.getBoolean(Constants.IS_TEACHER));
-                                                }
-
-
-
                                                 binding.googleSignInButton.setVisibility(View.GONE);
                                                 binding.progressBar.setVisibility(View.GONE);
                                                 binding.progressSpaceTop.setVisibility(View.GONE);
                                                 binding.progressSpaceBottom.setVisibility(View.GONE);
+
+                                                if(documentSnapshot.getBoolean(Constants.IS_TEACHER) != null) {
+                                                    Log.i("fuga", "153");
+                                                    preferenceManager.putBoolean(Constants.IS_TEACHER, documentSnapshot.getBoolean(Constants.IS_TEACHER));
+                                                } else {
+                                                    // 学生？先生？
+                                                    if (Constants.SELECTED_TEACHER.equals(preferenceManager.getString(Constants.WHICH_SELECT))) {// 先生で、サインインを完了させないで、アプリを起動した場合
+                                                        Log.i("fuga", "158");
+                                                        Intent intent = new Intent(getApplicationContext(), UserIdentificationActivity.class);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        startActivity(intent);
+                                                        finish();
+                                                        return;
+                                                    }
+                                                    Log.i("fuga", "165");
+                                                    if(Constants.SELECTED_STUDENT.equals(preferenceManager.getString(Constants.WHICH_SELECT))) {// 学生で、サインインを完了させないで再度アプリを起動した場合
+
+                                                    }
+                                                }
+
 
                                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -175,6 +184,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                             } else {// アカウント新規登録
 
+                                                Log.i("fuga", "183");
 
                                                 // データベースにユーザ登録
                                                 HashMap<String , Object > map = new HashMap<>();
@@ -202,6 +212,8 @@ public class LoginActivity extends AppCompatActivity {
                                                 binding.progressSpaceTop.setVisibility(View.GONE);
                                                 binding.progressSpaceBottom.setVisibility(View.GONE);
 
+
+
                                                 Intent intent = new Intent(LoginActivity.this, UserIdentificationActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 startActivity(intent);
@@ -213,8 +225,6 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     });
 
-                            // preferenceに
-                            preferenceManager.putString(Constants.KEY_AUTH_TOKEN, idToken);
 
 
 

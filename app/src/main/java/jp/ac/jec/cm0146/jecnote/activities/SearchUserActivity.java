@@ -1,10 +1,30 @@
 package jp.ac.jec.cm0146.jecnote.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import jp.ac.jec.cm0146.jecnote.adapters.SearchUserAdapter;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivitySearchUserBinding;
+import jp.ac.jec.cm0146.jecnote.models.StudentUser;
+import jp.ac.jec.cm0146.jecnote.utilities.Constants;
 
 public class SearchUserActivity extends AppCompatActivity {
 
@@ -19,7 +39,98 @@ public class SearchUserActivity extends AppCompatActivity {
         setListener();
     }
 
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void isLoading(boolean bool) {
+        if(bool == true) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.studentUserList.setVisibility(View.GONE);
+        } else {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.studentUserList.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showErrorMessage() {
+        binding.errorMessage.setText("ユーザが見つかりませんでした。");
+        binding.errorMessage.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.GONE);
+        binding.studentUserList.setVisibility(View.GONE);
+    }
+
     private void setListener() {
         binding.backBtn.setOnClickListener(v -> finish());
+        binding.searchFromSchoolID.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    // ここでfireStoreで検索をかける
+                    getUserList(v.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
     }
+
+    private void getUserList(String keyword) {
+        // firestoreから検索条件に一部でも一致したら、そのユーザを返す。
+        // FIXME: 部分一致の検索はできないそう。前方一致はできるそうなので、それで実装する。
+        // やろうと思えば、できそうだが、（onComplete内でkeywordと比べて、、、、）毎回全ユーザをゲットするのは通信も大きく無駄になるであろう
+
+        isLoading(true);
+
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USER)
+                .orderBy(Constants.KEY_USER_EMAIL)
+                .startAt(keyword)
+                .endAt(keyword + "\uf8ff")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {// データある
+                            Log.i("hogehoge", "94");
+                            List<StudentUser> users = new ArrayList<>();
+                            for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                                // 学生のユーザデータを格納
+                                StudentUser studentUser = new StudentUser();
+                                Log.i("hogehoge", "99");
+                                studentUser.userDisplayName = queryDocumentSnapshot.getString(Constants.KEY_USER_NAME);
+                                studentUser.userEmail = queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL);
+                                studentUser.userImage = queryDocumentSnapshot.getString(Constants.KEY_USER_IMAGE);
+                                studentUser.id = queryDocumentSnapshot.getId();
+                                users.add(studentUser);
+                            }
+                            if (users.size() > 0) {
+                                // ユーザ見つけた時
+                                Log.i("hogehoge", "107");
+                                // ここで、ListViewへセット
+                                SearchUserAdapter adapter = new SearchUserAdapter(getApplicationContext(), SearchUserActivity.this);
+                                for(StudentUser user : users) {
+                                    adapter.add(user);
+                                }
+                                binding.studentUserList.setAdapter(adapter);
+
+                                isLoading(false);
+                                binding.errorMessage.setVisibility(View.GONE);
+
+                            } else {
+                                showErrorMessage();
+                            }
+                        } else {
+                            showErrorMessage();
+                        }
+                    }
+                });
+
+    }
+
+
+
+
+
+
 }
