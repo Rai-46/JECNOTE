@@ -45,6 +45,9 @@ public class SearchUserAdapter extends ArrayAdapter<StudentUser> {
             TextView userName = (TextView) convertView.findViewById(R.id.userDisplayName);
             userName.setText(user.userDisplayName);
 
+            // タップされた時のリスナー(Activityのimplementsメソッドの呼び出し)
+            convertView.setOnClickListener(v -> searchUserActivity.onTapListener(user));
+
         }
         return convertView;
     }

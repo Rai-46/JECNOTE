@@ -10,11 +10,17 @@
 <!--    テキストカラー-->
     <color name="textMenu">#FF233B6C</color>
     <color name="textValue">#FF333333</color>
+    <color name="hintText">#FF757575</color>
     <color name="textError">#FFDD0000</color>
 <!--    メインカラー-->
     <color name="MainColor">#0D8A07</color>
     <color name="StatusColor">#FF23C74F</color>
     <color name="SecondColor">#228B22</color>
+
+<!--    メッセージ入力欄-->
+    <color name="textFieldBackgroundColor">#FFF1F1F1</color>
+    <color name="sentMessageBackgroundColor">#FF118A00</color>
+    <color name="receiveMessageBackgroundColor">#FFD6D7FA</color>
 
 <!--    メイン画面のカード-->
     <color name="MenuStrokeColor">#FF20B2AA</color>

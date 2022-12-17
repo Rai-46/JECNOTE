@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp">
+
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/recentUserImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/recentUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学校の先生"
+            android:singleLine="true"
+            android:textSize="24sp"
+            android:padding="5dp"
+            android:textColor="@color/textValue"/>
+
+        <TextView
+            android:id="@+id/resentMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="メッセージがあります。"
+            android:visibility="gone"
+            android:textColor="@color/hintText"/>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/messageBatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_round_circle_24"
+        android:padding="5dp"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

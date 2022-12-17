@@ -3,10 +3,14 @@ package jp.ac.jec.cm0146.jecnote.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.hardware.input.InputManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,12 +27,14 @@ import java.util.List;
 
 import jp.ac.jec.cm0146.jecnote.adapters.SearchUserAdapter;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivitySearchUserBinding;
+import jp.ac.jec.cm0146.jecnote.listener.SearchUserActivityListener;
 import jp.ac.jec.cm0146.jecnote.models.StudentUser;
 import jp.ac.jec.cm0146.jecnote.utilities.Constants;
 
-public class SearchUserActivity extends AppCompatActivity {
+public class SearchUserActivity extends AppCompatActivity implements SearchUserActivityListener {
 
     private ActivitySearchUserBinding binding;
+    private InputMethodManager mInputMethodManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,12 @@ public class SearchUserActivity extends AppCompatActivity {
         binding = ActivitySearchUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        init();
         setListener();
+    }
+
+    private void init () {
+        mInputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     private void showToast(String message) {
@@ -47,6 +58,7 @@ public class SearchUserActivity extends AppCompatActivity {
         if(bool == true) {
             binding.progressBar.setVisibility(View.VISIBLE);
             binding.studentUserList.setVisibility(View.GONE);
+            binding.errorMessage.setVisibility(View.GONE);
         } else {
             binding.progressBar.setVisibility(View.GONE);
             binding.studentUserList.setVisibility(View.VISIBLE);
@@ -62,17 +74,27 @@ public class SearchUserActivity extends AppCompatActivity {
 
     private void setListener() {
         binding.backBtn.setOnClickListener(v -> finish());
+        // TODO: 急にこのメソッドが聞かなくなった、なんで？さっきまで動いていたのに。
         binding.searchFromSchoolID.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    // もし、未入力だったら、
+                    if(v.getText().toString().length() == 0) {
+                        showErrorMessage();
+                        return false;
+                    }
+
                     // ここでfireStoreで検索をかける
                     getUserList(v.getText().toString());
+                    // キーボードしまう
+                    mInputMethodManager.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     return true;
                 }
                 return false;
             }
         });
+
     }
 
     private void getUserList(String keyword) {
@@ -128,9 +150,13 @@ public class SearchUserActivity extends AppCompatActivity {
 
     }
 
+    // Listがタップされた時の処理。タップされたStudentUserの情報をもらっている
+    @Override
+    public void onTapListener(StudentUser user) {
+        // チャット画面に遷移。userを渡す。
 
-
-
-
-
+        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
 }

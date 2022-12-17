@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <ImageButton
                 android:id="@+id/backBtn"
@@ -48,7 +48,7 @@
 
 
 
-    <com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/identificationPassword_layout"
         style="?attr/textInputOutlinedStyle"
         android:layout_width="match_parent"
@@ -59,6 +59,8 @@
             android:id="@+id/searchFromSchoolID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
+            android:imeOptions="actionGo"
             android:hint="学籍番号"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -67,6 +69,7 @@
         android:id="@+id/studentUserList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
         android:layout_margin="10dp"
         android:dividerHeight="20sp"
         android:divider="@null"/>
