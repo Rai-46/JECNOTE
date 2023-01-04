@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.InputStream;
 import java.util.List;
 
-import jp.ac.jec.cm0146.jecnote.activities.ChatActivity;
 import jp.ac.jec.cm0146.jecnote.activities.ChatListActivity;
+import jp.ac.jec.cm0146.jecnote.database.ChatDataOpenHelper;
 import jp.ac.jec.cm0146.jecnote.databinding.ItemContainerRecentConversionBinding;
 import jp.ac.jec.cm0146.jecnote.listener.ConversionListener;
 import jp.ac.jec.cm0146.jecnote.models.ChatMessage;
@@ -30,11 +30,13 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
     private final List<ChatMessage> chatMessage;
     private final ConversionListener conversionListener;
     private PreferenceManager preferenceManager;
+    private ChatListActivity activity;
 
     public RecentConversationsAdapter(List<ChatMessage> chatMessage, ConversionListener conversionListener, ChatListActivity activity) {
         this.chatMessage = chatMessage;
         this.conversionListener = conversionListener;
         preferenceManager = new PreferenceManager(activity.getApplicationContext());
+        this.activity = activity;
     }
 
 
@@ -56,7 +58,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         // setDataにchatDataを渡す（その中でデータをsetしてもらう）
         holder.setData(chatMessage.get(position));
         // why教員アカウントの際に、ここのchatMessageにデータが十分に入っていない -> 無理やり解決
-        Log.i("testtest", "onBIndVIewHolder   name   " + chatMessage.get(position).firstReceiverName);
+//        Log.i("testtest", "onBIndVIewHolder   name   " + chatMessage.get(position).firstReceiverName);
     }
 
     @Override
@@ -77,56 +79,58 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
 
         void setData(ChatMessage chatMessage) {
             // 相手の画像をセット
-            new DownloadUserImage(binding.recentUserImage).execute(chatMessage.firstReceiverImage);
+            new DownloadUserImage(binding.recentUserImage).execute(chatMessage.getFirstReceiverImage());
 
             Log.i("arere", "kiteruyo");
 
 
 
-//            Log.i("lastSender", "lastSenderID " + chatMessage.lastSenderID);
-//            Log.i("lastSender", "自分のID " + preferenceManager.getString(Constants.KEY_USER_ID));
 
+            // isRead は trueが既読した falseが未読
 
-            // 自分が送ったメッセージの時はresentMessageもBatchも非表示にしたい
-            // TODO チャットをリアルタイムでした時に、既読になっているのに、一覧では既読になっていない問題の解決
-            // TODO isReadがfalseかつ、相手が最後のメッセージの時だけ、表示させる！
+            /*
+            isReadがfalseかつ、相手がラストメッセージの時に表示
+            自分がラストメッセージなら、非表示
+             */
 
-            // TODO あと、リアルタイムでしているときに既読の表示をさせれるようにしたい
+            Log.i("FirestoreCheck", "-------------------------------------");
 
-//            if(preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.lastSenderID)) {
-            if(preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.lastSenderID)) {
-                Log.i("lastSender", "自分が最後のメッセージtrue");
-                Log.i("lastSender", "    送信者" + chatMessage.lastSenderID);
-                binding.resentMessage.setText("");
-                binding.messageBatch.setVisibility(View.GONE);
-            } else {
-                Log.i("lastSender", "自分が最後のメッセージfalse");
-                Log.i("lastSender", "    送信者" + chatMessage.lastSenderID);
-                binding.resentMessage.setText("新着メッセージがあります。");
-                binding.resentMessage.setVisibility(View.VISIBLE);
-                binding.messageBatch.setVisibility(View.VISIBLE);
-            }
-//            if ((preferenceManager.getString(Constants.KEY_USER_ID)).equals(chatMessage.lastSenderID)) {
-//                Log.i("lastSender", "自分が最後のメッセージtrue");
-//                binding.resentMessage.setText("");
-//                binding.messageBatch.setVisibility(View.GONE);
-//            } else {
-//                Log.i("lastSender", "自分が最後のメッセージfalse");
-//            }
+                if (preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.getLastSenderID())) {
+                    Log.i("FirestoreCheck", "自分ラストメッセージ");
+
+                    binding.resentMessage.setText("");
+                    binding.messageBatch.setVisibility(View.GONE);
+                } else {
+                    Log.i("FirestoreCheck", "相手ラストメッセージ");
+                    if(!chatMessage.getIsRead()) {
+                        Log.i("FirestoreCheck", "isRead false");
+
+                        binding.resentMessage.setText("新着メッセージがあります。");
+
+                        binding.messageBatch.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.resentMessage.setText("");
+                        binding.messageBatch.setVisibility(View.GONE);
+                    }
+                }
+
 
             //相手の名前をセット
             // もし、最初の受け取り主が自分だったら、表示するのは、firstSenderName
             // else 最初の受け取り主が相手だったら、表示するのは、firstReceiverName
-            if (!preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.conversionId)) {
+            if (!preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.getConversionId())) {
                 Log.i("testtest", "84");
-                binding.recentUserName.setText(chatMessage.firstReceiverName);
+                Log.i("FirestoreCheck", "" + chatMessage.getFirstReceiverName());
+                binding.recentUserName.setText(chatMessage.getFirstReceiverName());
 
             } else {
                 Log.i("testtest", "87");
-                binding.recentUserName.setText(chatMessage.firstSenderName);
+                Log.i("FirestoreCheck", "" + chatMessage.getFirstSenderId());
+                binding.recentUserName.setText(chatMessage.getFirstSenderName());
             }
 
 
+            Log.i("FirestoreCheck", "-------------------------------------");
 
             // タッチイベントを定義?
             binding.getRoot().setOnClickListener(v -> {
@@ -135,9 +139,9 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 binding.messageBatch.setVisibility(View.GONE);
 
                 StudentUser user = new StudentUser();
-                user.id = chatMessage.conversionId;
-                user.userDisplayName = chatMessage.firstReceiverName;
-                user.userImage = chatMessage.firstReceiverImage;
+                user.id = chatMessage.getConversionId();
+                user.userDisplayName = chatMessage.getFirstReceiverName();
+                user.userImage = chatMessage.getFirstReceiverImage();
                 conversionListener.onConversionClicked(user);
             });
         }
@@ -157,7 +161,6 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             this.bmImage = bmImage;
         }
 
-        // TODO ここでぬるぽで落ちちゃう。。。。。。
         @Override
         public Bitmap doInBackground(String... urls) {
             String urldisplay = urls[0];

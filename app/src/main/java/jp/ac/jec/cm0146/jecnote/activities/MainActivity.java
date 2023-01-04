@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,14 +19,12 @@ import jp.ac.jec.cm0146.jecnote.adapters.MenuListAdapter;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivityMainBinding;
 import jp.ac.jec.cm0146.jecnote.listener.MainActivityListener;
 import jp.ac.jec.cm0146.jecnote.models.MenuItems;
-import jp.ac.jec.cm0146.jecnote.utilities.Constants;
 import jp.ac.jec.cm0146.jecnote.utilities.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity implements MainActivityListener {
 
     private ActivityMainBinding binding;
 
-    private PreferenceManager preferenceManager;
 
     private static final int MENU_GUIDE = 1;
     private static final int MENU_NEWS = 2;
@@ -43,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        preferenceManager = new PreferenceManager(getApplicationContext());
 
         setListener();
         setList();

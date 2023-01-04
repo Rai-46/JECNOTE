@@ -27,7 +27,6 @@
             android:id="@+id/recentUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="学校の先生"
             android:singleLine="true"
             android:textSize="24sp"
             android:padding="5dp"
@@ -38,8 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="メッセージがあります。"
-            android:visibility="gone"
             android:textColor="@color/hintText"/>
 
     </LinearLayout>

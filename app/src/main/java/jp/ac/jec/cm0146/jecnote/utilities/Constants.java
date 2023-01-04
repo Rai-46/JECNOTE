@@ -4,6 +4,7 @@ import android.security.AppUriAuthenticationPolicy;
 
 import org.checkerframework.checker.index.qual.UpperBoundUnknown;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class Constants {
@@ -33,7 +34,7 @@ public class Constants {
     public static final String KEY_SENDER_IMAGE = "senderImage";
     public static final String KEY_RECEIVER_IMAGE = "receiverImage";
     public static final String KEY_LAST_MESSAGE = "lastMessage";
-    public static final String KEY_IS_READED = "isReaded";
+    public static final String KEY_IS_READ = "isReaded";
 
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";
     public static final String REMOTE_MSG_CONTENT_TYPE = "Content-Type";
@@ -53,6 +54,7 @@ public class Constants {
     public static final String DB_RECEIVER_ID = "ReceiverID";
     public static final String DB_TIME_STAMP = "TimeStamp";
     public static final String DB_MESSAGE_DATA = "Message";
+    public static final String DB_UPDATED_DATE = "UpdateDate";
 
 
 

@@ -17,6 +17,9 @@
         android:theme="@style/Theme.JECNOTE"
         tools:targetApi="31">
         <activity
+            android:name=".activities.NewsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ChatActivity"
             android:exported="false" />
         <activity

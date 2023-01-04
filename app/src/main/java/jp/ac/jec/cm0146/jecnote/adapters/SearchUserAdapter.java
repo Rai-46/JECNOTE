@@ -53,7 +53,7 @@ public class SearchUserAdapter extends ArrayAdapter<StudentUser> {
     }
 
     // URLから画像をImageViewに追加する
-    // TODO AsyncTaskが非推奨だから、余裕があれば直す！
+    // FIXME AsyncTaskが非推奨だから、余裕があれば直す！
     public class DownloadUserImage extends AsyncTask<String, Void, Bitmap> {
         protected ImageView bmImage;
 

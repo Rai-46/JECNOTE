@@ -1,7 +1,10 @@
 package jp.ac.jec.cm0146.jecnote.utilities;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import java.util.Date;
 
 public class PreferenceManager {
 

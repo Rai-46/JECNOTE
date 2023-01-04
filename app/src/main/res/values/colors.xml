@@ -24,6 +24,6 @@
 
 <!--    メイン画面のカード-->
     <color name="MenuStrokeColor">#FF20B2AA</color>
-
+    <color name="NewsStrokeColor">#FF555555</color>
     <color name="backgroundColor">#FFDDDDDD</color>
 </resources>

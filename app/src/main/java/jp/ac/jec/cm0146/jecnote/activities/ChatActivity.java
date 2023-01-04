@@ -1,20 +1,24 @@
 package jp.ac.jec.cm0146.jecnote.activities;
 
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,10 +27,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.units.qual.C;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +41,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import jp.ac.jec.cm0146.jecnote.adapters.ChatAdapter;
+import jp.ac.jec.cm0146.jecnote.database.ChatDataOpenHelper;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivityChatBinding;
 import jp.ac.jec.cm0146.jecnote.models.ChatMessage;
 import jp.ac.jec.cm0146.jecnote.models.StudentUser;
@@ -55,6 +62,11 @@ public class ChatActivity extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
     private String conversionId = null;
+
+    private ChatDataOpenHelper chatDataOpenHelper;
+
+    // 画面を開いているかどうか
+    private boolean isOpenView = false;
 
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -78,11 +90,16 @@ public class ChatActivity extends AppCompatActivity {
     private void init() {
         Log.i("fugafuga", "init()");
 
+        chatDataOpenHelper = new ChatDataOpenHelper(getApplicationContext());
 
         // ShardPreferenceのインスタンス生成
         preferenceManager = new PreferenceManager(getApplicationContext());
+        // 更新日時更新
+        preferenceManager.putString(Constants.DB_UPDATED_DATE, getReadableDateTime(new Date()));
         // チャットデータを格納するArrayList
         chatMessages = new ArrayList<>();
+//        chatMessages = chatDataOpenHelper.selectChatData(receiverUser.id);
+        Log.i("testDatabase", "chatMessages:" + chatMessages + " " + receiverUser.id);
         // アダプターを定義
         chatAdapter = new ChatAdapter(
                 chatMessages,
@@ -90,6 +107,8 @@ public class ChatActivity extends AppCompatActivity {
         );
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
+
+
     }
 
     // Intentで送られてきたチャット相手の詳細を定義する
@@ -119,30 +138,42 @@ public class ChatActivity extends AppCompatActivity {
     private void sendMessage() {
 
         // インターネットへ接続されているのか確認
-//        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-//        NetworkInfo info = cm.getActiveNetworkInfo();
-//        if(info != null && info.isAvailable()) {
-//            // 接続している
-//            Log.i("インターネット", "接続");
-//        } else {
-//            // 接続されていない
-//            Log.i("インターネット", "接続していない");
-//
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-////        builder.setIcon(); TODO アプリのアイコン
-//            builder.setTitle("確認");
-//            builder.setMessage("インターネット接続を確認してください。");
-//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    Intent intent = new Intent();
-//                    intent.setAction(Settings.ACTION_WIRELESS_SETTINGS);
-//                    startActivity(intent);
-//                }
-//            });
-//            builder.show();
-//            return;
-//        }
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if(info != null && info.isAvailable()) {
+            // 接続している
+            Log.i("インターネット", "接続");
+        } else {
+            // 接続されていない
+            Log.i("インターネット", "接続していない");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
+//        builder.setIcon(); TODO アプリのアイコン
+            builder.setTitle("確認");
+            builder.setMessage("インターネット接続を確認してください。");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            builder.setNeutralButton("設定へ", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            builder.show();
+            return;
+        }
+
+        // 文字をちゃんと入力しているか
+        // FIXME 全角の空白文字は検知できず
+        if(binding.inputMessage.getText().toString().isEmpty() || binding.inputMessage.getText().toString().trim().equals("")) {
+            return;
+        }
 
 
         Log.i("fugafuga", "sendMessage()");
@@ -156,13 +187,13 @@ public class ChatActivity extends AppCompatActivity {
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         // KEY_TIMESTAMPがキー、今のDateがValue
         message.put(Constants.KEY_TIMESTAMP, new Date());
-        // 既読情報
-        message.put(Constants.KEY_IS_READED, false);
+        // isRead SQLite用
+        message.put(Constants.KEY_IS_READ, false);
 
         // databaseのコレクションに追加
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
         // null出ない = 以前にも話したことがあるユーザ
-        if(conversionId != null) {
+        if(conversionId != null) {// TODO ここの条件が甘い、、別端末からチャットを始めるとここを通らず、新規ユーザとして追加されて、chatListに同じユーザが複数登録されてしまう
             // 更新する
             updateConversion(binding.inputMessage.getText().toString());
         } else {// conversionIdがNull = 初めて話すユーザ
@@ -175,7 +206,7 @@ public class ChatActivity extends AppCompatActivity {
             conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.userImage);
             conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
-            conversion.put(Constants.KEY_IS_READED, false);
+            conversion.put(Constants.KEY_IS_READ, false);
             conversion.put(Constants.LAST_SEND_MESSAGE_USERID, preferenceManager.getString(Constants.KEY_USER_ID));
             conversion.put(Constants.LAST_RECEIVED_MESSAGE_USERID, receiverUser.id);
             addConversion(conversion);
@@ -200,7 +231,15 @@ public class ChatActivity extends AppCompatActivity {
             showToast(exception.getMessage());
         }
 
+        chatDataOpenHelper.insertMessageData(
+                receiverUser.id,
+                preferenceManager.getString(Constants.KEY_USER_ID),
+                getReadableDateTime(new Date()),
+                binding.inputMessage.getText().toString()
+        );
+
         binding.inputMessage.setText(null);
+
     }
 
     private void sendNotification(String messageBody) {
@@ -218,6 +257,7 @@ public class ChatActivity extends AppCompatActivity {
                             if(responseJson.getInt("failure") == 1) {
                                 JSONObject error = (JSONObject) results.get(0);
                                 showToast(error.getString("error"));
+//                                showToast("ここ？");
                                 return;
                             }
                         }
@@ -239,7 +279,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private String getReadableDateTime(Date date) {
         Log.i("fugafuga", "getReadableDateTime()");
-        return new SimpleDateFormat("MM月 dd日, yyyy - hh:mm a", Locale.getDefault()).format(date);
+        return new SimpleDateFormat("yyyy年 MM月 dd日 HH:mm:ss", Locale.getDefault()).format(date);
     }
 
     // もしかして、初めて会話した時のアイコンとかの情報をINSERTしてる？？？チャット情報の親玉？
@@ -259,7 +299,7 @@ public class ChatActivity extends AppCompatActivity {
                 Constants.KEY_TIMESTAMP, new Date(),
                 Constants.LAST_SEND_MESSAGE_USERID, preferenceManager.getString(Constants.KEY_USER_ID),
                 Constants.LAST_RECEIVED_MESSAGE_USERID, receiverUser.id,
-                Constants.KEY_IS_READED, false
+                Constants.KEY_IS_READ, false
         );
         Log.i("fugafugaa", "自分のID  " + preferenceManager.getString(Constants.KEY_USER_ID));
     }
@@ -277,11 +317,22 @@ public class ChatActivity extends AppCompatActivity {
         database.collection(Constants.KEY_COLLECTION_CHAT)// 自分に送られた
                 .whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+//                .whereEqualTo(Constants.KEY_IS_READ, false) // 自分がまだ見ていないもので、
                 .addSnapshotListener(eventListener);
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
+
+        Log.i("happyNewYear", "チャットのイベントリスナー呼ばれたよ");
+
+        // リアルタイムに既読管理
+        // もし、画面を起動していたら、onResumeを呼び出す。
+        if (isOpenView) {
+            onResume();
+        }
+
         Log.i("fugafuga", "EventListener<>");
         // エラーがあればreturn
         if(error != null) {
@@ -292,20 +343,66 @@ public class ChatActivity extends AppCompatActivity {
             for (DocumentChange documentChange : value.getDocumentChanges()) {
                 if(documentChange.getType() == DocumentChange.Type.ADDED) {
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
-                    chatMessage.receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
-                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_MESSAGE);
-                    chatMessage.dateTime = getReadableDateTime(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
-                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
-//                    chatMessage.conversionId = documentChange.getDocument().getId();
+                    chatMessage.setSenderId(documentChange.getDocument().getString(Constants.KEY_SENDER_ID));
+                    chatMessage.setReceiverId(documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID));
+                    chatMessage.setMessage(documentChange.getDocument().getString(Constants.KEY_MESSAGE));
+                    chatMessage.setDateTime(getReadableDateTime(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP)));
+                    chatMessage.setDateObject(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
+//                    chatMessage.conversionId = documentChange.getDocument().getId()
                     chatMessages.add(chatMessage);
 
-                    //TODO ここでSQLiteにchatMessagesデータを格納する
+                    // TODO ここでSQLiteにchatMessagesデータを格納する + DBからSELECTしてきたArrayListに追加する。(DB + Firestoreのデータ）
+                    // TODO ここでINSERTするべきなのか？？？　→　ChatListActivityのイベントリスナーでもいいような気が、、、
+                    // TODO 　→　そうすると、毎回チャットデータをインサートする + chatMessagesに追加されてしまう、、、
+                    // それとも、チャットデータにisAddを追加して、DBに追加したら、trueに、されていなかったら、falseに、、、（これだと、受け取り側ができなくなってNG）
+
+
+                    /**
+                     *TODO ここでは、相手からのチャットメッセージのみINSERTするとか
+                     * 自分が送ったやつは、sendMessageないでINSERTさせる
+                     */
+
+                    /*
+                    TODO 最終参照にちじを保存しておいて、それ以降のチャットデータ（日付）をINSERTできればいい
+                    preferenceに登録するのは、現在の日時。（更新日時）
+                    比べるのは、messageDataの日付で、preferenceに登録されている更新日時よりも後に送信されたものを
+                    DBにINSERTする。だけど、これでは不十分。じゃないかもしれない。。。
+
+                    その後、相手からのメッセージだったら、削除する。
+                     */
+                    //
+                    if(parseDate(chatMessage.getDateTime()).compareTo(parseDate(preferenceManager.getString(Constants.DB_UPDATED_DATE))) >= 0) {
+                        Log.i("happyNewYear", "めっせーじ：" + chatMessage.getDateTime());
+                        Log.i("happyNewYear", "ぷりふぁれんす：" + preferenceManager.getString(Constants.DB_UPDATED_DATE));
+                        Log.i("happyNewYear", "内容：" + chatMessage.getMessage() + "\n--------------------");
+                        chatDataOpenHelper.insertMessageData(
+                                receiverUser.id,
+                                documentChange.getDocument().getString(Constants.KEY_SENDER_ID),
+                                getReadableDateTime(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP)),
+                                documentChange.getDocument().getString(Constants.KEY_MESSAGE)
+                        );
+
+                        // 読んだ　= DBに保存した
+                        database.collection(Constants.KEY_COLLECTION_CHAT)
+                                .document(documentChange.getDocument().getId())
+                                .update(Constants.KEY_IS_READ, true);
+//                        database.collection(Constants.KEY_COLLECTION_CHAT)
+//                                .document(documentChange.getDocument().getId())
+//                                .delete();
+                    }
+
+
+
+//                    chatDataOpenHelper.insertChatTable(receiverUser.id); // これは一度だけにしたい
+
 
                 }
             }
+            // selectChatDataの中でsortさせた
+//            chatMessages = chatDataOpenHelper.selectChatData(receiverUser.id);
+
             // 並び替えている
-            Collections.sort(chatMessages, (obj1, obj2) -> obj1.dateObject.compareTo(obj2.dateObject));
+            chatMessages.sort((obj1, obj2) -> parseDate(obj1.getDateTime()).compareTo(parseDate(obj2.getDateTime())));
             if (count == 0) {
                 /**
                  * データセットが変更されたことを、登録されたオブザーバに通知する。
@@ -381,6 +478,9 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("fugafuga", "onResume()");
+
+        isOpenView = true;
+
         listenAvailabilityOfReceiver();
         readMessage();
         isRead();
@@ -389,9 +489,9 @@ public class ChatActivity extends AppCompatActivity {
     // 相手は既読している？
     private void isRead() {
 
-        database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser.id)
+        database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .whereEqualTo(Constants.LAST_SEND_MESSAGE_USERID, preferenceManager.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.LAST_RECEIVED_MESSAGE_USERID, receiverUser.id)
                 .addSnapshotListener(ChatActivity.this, (value, error) -> {
                     if(error != null) {
                         return;
@@ -399,35 +499,53 @@ public class ChatActivity extends AppCompatActivity {
                     if(value != null) {
                         // 既読がtrueだったら、、、、、
                         for(DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                            if(documentSnapshot.getBoolean(Constants.KEY_IS_READED)) {
+                            if(Boolean.TRUE.equals(documentSnapshot.getBoolean(Constants.KEY_IS_READ))) {
                                 Log.i("kidoku", "VISIBLE    \n" + documentSnapshot.getString(Constants.KEY_SENDER_NAME));
                                 binding.alreadyLead.setVisibility(View.VISIBLE);
+                                break;
                             } else {
                                 Log.i("kidoku", "GONE    \n" + documentSnapshot.getString(Constants.KEY_SENDER_NAME));
                                 binding.alreadyLead.setVisibility(View.GONE);
-                                break;
+//                                break;
                             }
                         }
                     }
                 });
+
+        binding.alreadyLead.setVisibility(View.GONE);
+
     }
 
     // 既読フラグをつける + SQLiteに格納
     private void readMessage() {
+        // TODO チャットデータ（FirestoreをSQLiteに格納）
+        // TODO　ここでチャットデータを削除する
 
-        // 過去のチャットデータと、最近のチャットデータに既読フラグを追加する
-        database.collection(Constants.KEY_COLLECTION_CHAT).whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .get()
-                .addOnCompleteListener( task -> {
-                    if(task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {// 成功かつ、データがあるかつ、データsizeが0以上のとき、
-                        for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                            database.collection(Constants.KEY_COLLECTION_CHAT).document(documentSnapshot.getId())
-                                    .update(Constants.KEY_IS_READED, true);
-                            Log.i("readtest", "is readed update!");
+        //TODO ここでSQLiteにchatMessagesデータを格納する + DBからSELECTしてきたArrayListに追加する。(DB + Firestoreのデータ）
 
-                        }
-                    }
-                });
+//        database.collection(Constants.KEY_COLLECTION_CHAT)
+//                .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+//                .whereEqualTo(Constants.KEY_IS_READ, false) // FIXME ここはでバック用にしてる。本当はいらないかも
+//                .get()
+//                .addOnCompleteListener( task -> {
+//                    if(task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {// 成功かつ、データがあるかつ、データsizeが0以上のとき、
+//                        for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+//                            // SQLiteに保存（自分が受け取ったメッセージ）
+//                            chatDataOpenHelper = new ChatDataOpenHelper(getApplicationContext());
+//                            chatDataOpenHelper.insertChatTable(receiverUser.id);
+//                            chatDataOpenHelper.insertMessageData(
+//                                    documentSnapshot.getString(Constants.KEY_RECEIVER_ID),
+//                                    documentSnapshot.getString(Constants.KEY_SENDER_ID),
+//                                    getReadableDateTime(documentSnapshot.getDate(Constants.KEY_TIMESTAMP)),
+//                                    documentSnapshot.getString(Constants.KEY_MESSAGE)
+//                            );
+//                            database.collection(Constants.KEY_COLLECTION_CHAT).document(documentSnapshot.getId())
+//                                    .update(Constants.KEY_IS_READ, true);
+//                            Log.i("readtest", "is readed update!");
+//
+//                        }
+//                    }
+//                });
 
             // ラストメッセージの送信者が相手で、かつ、未読だったら、true(既読)に変える
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
@@ -439,11 +557,9 @@ public class ChatActivity extends AppCompatActivity {
                         for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
                             database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(documentSnapshot.getId())
                                     .update(
-
-                                            Constants.KEY_IS_READED, true
+                                            Constants.KEY_IS_READ, true
                                     );
                         }
-
                     }
                 });
     }
@@ -476,30 +592,39 @@ public class ChatActivity extends AppCompatActivity {
             }
             // valueは受け取り主データ
             if(value != null) {
-//                if(value.getLong(Constants.KEY_AVAILABILITY) != null) {
-//                    /**requireNonNull
-//                     * 指定されたオブジェクトの参照が NULL でないことをチェックします。
-//                     * このメソッドは、主にメソッドやコンストラクタのパラメータ検証を行うために設計されており、以下のようなデモが行われています。
-//                     * Nullの場合はnullpoが返る
-//                     */
-//                    int availability = Objects.requireNonNull(
-//                            value.getLong(Constants.KEY_AVAILABILITY)
-//                    ).intValue();// Long -> Int
-//                    // 受け取り主がオンラインかどうか。
-//                    isReceiverAvailable = availability == 1;
-//                }
                 receiverUser.token = value.getString(Constants.USER_FCM_TOKEN);
                 if(receiverUser.userImage == null) {
                     chatAdapter.notifyItemRangeChanged(0, chatMessages.size());
                 }
             }
 
-//            if(isReceiverAvailable) {
-//                binding.textAvailability.setVisibility(View.VISIBLE);
-//            } else {
-//                binding.textAvailability.setVisibility(View.GONE);
-//            }
 
         });
+    }
+
+    // Date情報 String -> Date
+    private Date parseDate(String dateStr) {
+
+        Date date = null;
+
+        try {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年 MM月 dd日 HH:mm:ss");
+            date = sdf.parse(dateStr);
+//            Log.i("dateInfo", String.valueOf(date));
+            return date;
+
+        } catch (ParseException e ) {
+            e.printStackTrace();
+        }
+
+        return date;
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isOpenView = false;
     }
 }

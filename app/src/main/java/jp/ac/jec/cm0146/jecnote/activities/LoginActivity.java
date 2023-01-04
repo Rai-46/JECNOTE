@@ -4,6 +4,7 @@ package jp.ac.jec.cm0146.jecnote.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.AppLaunchChecker;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-//        setListener();
+        setListener();
 
     }
 
@@ -77,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     // signIn
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);// 非推奨だけど、、、
+        startActivityForResult(signInIntent, RC_SIGN_IN); // 非推奨だけど、、、
     }
 
     @Override
@@ -241,6 +242,28 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        /*
+        アプリケーションを新規インストール後にMainAcvitity起動
+        before: false
+        after: true
+
+        アプリケーションがタスクにいない状態から起動
+        before: true
+        after: true
+
+        アプリケーションのデータ削除後に、アプリを起動
+        before: false
+        after: true
+         */
+        boolean before = AppLaunchChecker.hasStartedFromLauncher(getApplicationContext());
+        AppLaunchChecker.onActivityCreate(this);
+        boolean after = AppLaunchChecker.hasStartedFromLauncher(getApplicationContext());
+
+        if((before == false) && (after == true)) { // 新規インストール
+            preferenceManager.clear();
+            return;
+        }
+
         // ログインしたことがあるか？（同じ端末でアプリを開き直した時の）
         if((preferenceManager.getBoolean(Constants.KEY_LOGINED) != null) && preferenceManager.getBoolean(Constants.KEY_LOGINED)) {
             Log.i("fuga", "214");
@@ -279,6 +302,5 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        setListener();
     }
 }

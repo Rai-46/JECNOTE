@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+
 
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -57,9 +57,7 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
         database = FirebaseFirestore.getInstance();
     }
 
-    private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
+
 
     private void setListener() {
         binding.backBtn.setOnClickListener(v -> finish());
@@ -116,78 +114,77 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
                     String receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
                     // ChatMessageのインスタンス生成
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.senderId = senderId;
-                    chatMessage.receiverId = receiverId;
+                    chatMessage.setSenderId(senderId);
+                    chatMessage.setReceiverId(receiverId);
 
                     if(preferenceManager.getString(Constants.KEY_USER_ID).equals(senderId)) {// 自分が送り主だった時
                         // 受け取り主のアイコンを代入
-                        chatMessage.firstReceiverImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
+                        chatMessage.setFirstReceiverImage(documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE));
                         // 受け取り主の名前を代入
-                        chatMessage.firstReceiverName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
+                        chatMessage.setFirstReceiverName(documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME));
                         // 受け取り主のIDを代入
-                        chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
+                        chatMessage.setConversionId(documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID));
                         // 最初の送り主には、自分のID
-                        chatMessage.firstSenderId = documentChange.getDocument().getString(Constants.KEY_USER_ID);
+                        chatMessage.setFirstSenderId(documentChange.getDocument().getString(Constants.KEY_USER_ID));
                         // 最初の送り主名前は、自分の名前
-                        chatMessage.firstSenderName = documentChange.getDocument().getString(Constants.KEY_USER_NAME);
+                        chatMessage.setFirstSenderName(documentChange.getDocument().getString(Constants.KEY_USER_NAME));
                     } else {// 自分以外が送り主だった時
                         // 送り主のアイコンを代入
-                        chatMessage.firstReceiverImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
+                        chatMessage.setFirstReceiverImage(documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE));
                         // 送り主の名前を代入
-                        chatMessage.firstReceiverName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
+                        chatMessage.setFirstReceiverName(documentChange.getDocument().getString(Constants.KEY_SENDER_NAME));
                         // 送り主のIDを代入
-                        chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
-                        chatMessage.firstSenderId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
+                        chatMessage.setConversionId(documentChange.getDocument().getString(Constants.KEY_SENDER_ID));
+                        chatMessage.setFirstSenderId(documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID));
                     }
                     // チャットメッセージを代入
-                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                    chatMessage.setMessage(documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE));
                     // 時刻データ？を代入
-                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                    chatMessage.setDateObject(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
                     // 最後の送信ユーザ
-                    chatMessage.lastSenderID = documentChange.getDocument().getString(Constants.LAST_SEND_MESSAGE_USERID);
+                    chatMessage.setLastSenderID(documentChange.getDocument().getString(Constants.LAST_SEND_MESSAGE_USERID));
                     // isRead TODO　ここがうまく効いてない説
-                    Log.i("isRead", "" + documentChange.getDocument().getBoolean(Constants.KEY_IS_READED));
-                    chatMessage.isRead = documentChange.getDocument().getBoolean(Constants.KEY_IS_READED);
+                    Log.i("isRead ChatListActivity", ":" + documentChange.getDocument().getBoolean(Constants.KEY_IS_READ));
+                    chatMessage.setIsRead(documentChange.getDocument().getBoolean(Constants.KEY_IS_READ));
 
                     // ArrayListに追加
-
                     // 同じユーザが入るのは止めたい
-//                    for(ChatMessage cm: conversations) {
-//                        // 今回の送り主と受け取り主が同じデータがArrayListにも入っていたらreturnする
-//                        // 同じチャットるーむが作られるのを阻止したい
-//
-//                        if(chatMessage.senderId.equals(cm.senderId) && chatMessage.receiverId.equals(cm.receiverId)) {
-//                            // 待ってこれじゃダメかも
-//                            Log.i("butbut??", "入ってしまった、、、");
-//                            return;
-//                        }
-//                    }
+                    for(ChatMessage cm: conversations) {
+                        // 今回の送り主と受け取り主が同じデータがArrayListにも入っていたらreturnする
+                        // 同じチャットるーむが作られるのを阻止したい
+
+                        if(chatMessage.getSenderId().equals(cm.getSenderId()) && chatMessage.getReceiverId().equals(cm.getReceiverId())) {
+                            // 待ってこれじゃダメかも -> いや、大丈夫そう（２回目）
+                            Log.i("butbut??", "入ってしまった、、、");
+                            return;
+                        }
+                    }
                     conversations.add(chatMessage);
-                } else if(documentChange.getType() == DocumentChange.Type.MODIFIED) { //TODO: 変更された時（もしかしたら、変更された項目だけ取ってくる感じかも）
+                } else if(documentChange.getType() == DocumentChange.Type.MODIFIED) { // 変更された時（もしかしたら、変更された項目だけ取ってくる感じかも）
 
                     for(int i = 0; i < conversations.size(); i++) {
                         // 変更された項目のsenderIDを代入
                         String senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                         // 変更された項目のreceiverIdを代入
                         String receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
-                        if(conversations.get(i).senderId.equals(senderId) && conversations.get(i).receiverId.equals(receiverId)) {
-                            conversations.get(i).message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                            conversations.get(i).dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                        if(conversations.get(i).getSenderId().equals(senderId) && conversations.get(i).getReceiverId().equals(receiverId)) {
+                            conversations.get(i).setMessage(documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE));
+                            conversations.get(i).setDateObject(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
+                            conversations.get(i).setIsRead(documentChange.getDocument().getBoolean(Constants.KEY_IS_READ));
+                            conversations.get(i).setLastSenderID(documentChange.getDocument().getString(Constants.LAST_SEND_MESSAGE_USERID));
                             break;
                         }
                     }
                 }
             }
             // 並び替えてるけど、、日付で並び替えてる？
-            Collections.sort(conversations, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
+            Collections.sort(conversations, (obj1, obj2) -> obj2.getDateObject().compareTo(obj1.getDateObject()));
             // Adapterに？データセットが変更されたことを登録されたオブザーバに通知する？？
             conversationsAdapter.notifyDataSetChanged();
             // アダプタの一へスムーズにスクロールをする。新しいメッセージがきたらスクロールされる
             binding.conversationsRecyclerView.smoothScrollToPosition(0);
             // recyclerViewを表示
             binding.conversationsRecyclerView.setVisibility(View.VISIBLE);
-            // progressBarを非表示
-//            binding.progressBar.setVisibility(View.GONE);
         }
     };
 

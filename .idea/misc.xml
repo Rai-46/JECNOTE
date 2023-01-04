@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/drawable/ic_round_send_24.xml" value="0.1405" />
         <entry key="app/src/main/res/drawable/list_item_ripple.xml" value="0.151" />
         <entry key="app/src/main/res/drawable/main_menu_background.xml" value="0.178" />
+        <entry key="app/src/main/res/drawable/news_item_background.xml" value="0.1555" />
         <entry key="app/src/main/res/drawable/sendmessage_background.xml" value="0.2215" />
         <entry key="app/src/main/res/drawable/user_icon_background.xml" value="0.121" />
         <entry key="app/src/main/res/font/zenmarugothic_medium.xml" value="0.1984375" />
@@ -22,8 +23,9 @@
         <entry key="app/src/main/res/layout/activity_chat_list.xml" value="0.14976654052734376" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1996337890625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.27355072463768115" />
+        <entry key="app/src/main/res/layout/activity_news.xml" value="0.15982055664062508" />
         <entry key="app/src/main/res/layout/activity_school_guide.xml" value="0.24003623188405798" />
-        <entry key="app/src/main/res/layout/activity_school_news.xml" value="0.17726157368093298" />
+        <entry key="app/src/main/res/layout/activity_school_news.xml" value="0.36342032612233927" />
         <entry key="app/src/main/res/layout/activity_search_user.xml" value="0.2860946655273438" />
         <entry key="app/src/main/res/layout/activity_student_identification.xml" value="0.23486531575520841" />
         <entry key="app/src/main/res/layout/activity_teacher_identification.xml" value="0.335" />
@@ -31,7 +33,8 @@
         <entry key="app/src/main/res/layout/item_container_recent_conversion.xml" value="0.26626617873924363" />
         <entry key="app/src/main/res/layout/item_conteiner_recieved_message.xml" value="0.19510202853479117" />
         <entry key="app/src/main/res/layout/item_conteiner_sent_message.xml" value="0.23174336751302088" />
-        <entry key="app/src/main/res/layout/main_activity_menu_item.xml" value="0.14281816387282353" />
+        <entry key="app/src/main/res/layout/main_activity_menu_item.xml" value="0.8158833494196985" />
+        <entry key="app/src/main/res/layout/news_activity_item.xml" value="0.24800923665364588" />
         <entry key="app/src/main/res/layout/studentuser_list_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/testlayout.xml" value="0.28894927536231885" />
       </map>

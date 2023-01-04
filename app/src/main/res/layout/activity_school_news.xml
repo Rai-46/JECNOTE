@@ -46,4 +46,12 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <ListView
+        android:id="@+id/listNews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:dividerHeight="20sp"
+        android:divider="@null"/>
+
 </LinearLayout>
