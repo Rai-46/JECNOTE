@@ -12,9 +12,9 @@ import androidx.annotation.Nullable;
 
 import jp.ac.jec.cm0146.jecnote.R;
 import jp.ac.jec.cm0146.jecnote.activities.SchoolNewsActivity;
-import jp.ac.jec.cm0146.jecnote.models.NewsItem;
+import jp.ac.jec.cm0146.jecnote.models.NewsListItem;
 
-public class NewsListAdapter extends ArrayAdapter<NewsItem> {
+public class NewsListAdapter extends ArrayAdapter<NewsListItem> {
 
     private SchoolNewsActivity activity;
 
@@ -26,7 +26,7 @@ public class NewsListAdapter extends ArrayAdapter<NewsItem> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        NewsItem newsItems = getItem(position);
+        NewsListItem newsItems = getItem(position);
         if(convertView == null) {
             LayoutInflater inflater = activity.getLayoutInflater();
             convertView = inflater.inflate(R.layout.news_activity_item, null);

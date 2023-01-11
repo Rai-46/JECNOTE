@@ -31,8 +31,9 @@
             <TextView
                 android:id="@+id/activityTitle"
                 android:layout_width="wrap_content"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:singleLine="true"
                 android:fontFamily="@font/zenmarugothic_medium"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
@@ -46,6 +47,13 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -57,41 +65,51 @@
 
             <ImageView
                 android:id="@+id/newsImage"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"/>
 
-            <TextView
-                android:id="@+id/newsTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textValue"
-                android:textSize="24sp"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/newsDate"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/newsTitle"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textColor="@color/textValue"/>
+                    android:textColor="@color/textValue"
+                    android:textSize="24sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/newsDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textColor="@color/textValue"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/newsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/textValue"
+                    android:textSize="18sp"/>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/newsText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColor="@color/textValue"
-                android:textSize="18sp"/>
+
 
         </LinearLayout>
 

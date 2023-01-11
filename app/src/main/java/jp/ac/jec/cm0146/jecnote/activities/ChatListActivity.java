@@ -2,10 +2,12 @@ package jp.ac.jec.cm0146.jecnote.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 
 
 import com.google.firebase.firestore.DocumentChange;
@@ -42,6 +44,7 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
         setContentView(binding.getRoot());
 
         preferenceManager = new PreferenceManager(getApplicationContext());
+
 
         init();
         getToken();
@@ -143,7 +146,7 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
                     chatMessage.setDateObject(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
                     // 最後の送信ユーザ
                     chatMessage.setLastSenderID(documentChange.getDocument().getString(Constants.LAST_SEND_MESSAGE_USERID));
-                    // isRead TODO　ここがうまく効いてない説
+                    // isRead
                     Log.i("isRead ChatListActivity", ":" + documentChange.getDocument().getBoolean(Constants.KEY_IS_READ));
                     chatMessage.setIsRead(documentChange.getDocument().getBoolean(Constants.KEY_IS_READ));
 
@@ -185,6 +188,8 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
             binding.conversationsRecyclerView.smoothScrollToPosition(0);
             // recyclerViewを表示
             binding.conversationsRecyclerView.setVisibility(View.VISIBLE);
+            // TODO ここでMainActivityのアイコン変える？？
+
         }
     };
 

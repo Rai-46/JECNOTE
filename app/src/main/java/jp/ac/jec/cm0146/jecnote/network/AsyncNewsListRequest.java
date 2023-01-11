@@ -10,10 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 import jp.ac.jec.cm0146.jecnote.activities.SchoolNewsActivity;
-import jp.ac.jec.cm0146.jecnote.models.NewsItem;
 
 public class AsyncNewsListRequest extends AsyncTask<Uri.Builder, Void, String> {
     SchoolNewsActivity activity;

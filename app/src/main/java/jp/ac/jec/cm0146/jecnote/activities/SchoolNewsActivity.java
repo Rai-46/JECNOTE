@@ -5,18 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import jp.ac.jec.cm0146.jecnote.adapters.NewsListAdapter;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivitySchoolNewsBinding;
-import jp.ac.jec.cm0146.jecnote.listener.NewsActivityListener;
-import jp.ac.jec.cm0146.jecnote.models.NewsItem;
+import jp.ac.jec.cm0146.jecnote.listener.SchoolNewsActivityListener;
+import jp.ac.jec.cm0146.jecnote.models.NewsListItem;
 import jp.ac.jec.cm0146.jecnote.network.AsyncNewsListRequest;
 import jp.ac.jec.cm0146.jecnote.utilities.JsonHelper;
 
-public class SchoolNewsActivity extends AppCompatActivity implements NewsActivityListener {
+public class SchoolNewsActivity extends AppCompatActivity implements SchoolNewsActivityListener {
 
     private ActivitySchoolNewsBinding binding;
 
@@ -47,9 +46,9 @@ public class SchoolNewsActivity extends AppCompatActivity implements NewsActivit
 
     private void setList(String json) {
 
-        ArrayList<NewsItem> newsItems = JsonHelper.parseJson(json);
+        ArrayList<NewsListItem> newsItems = JsonHelper.parseListJson(json);
         NewsListAdapter adapter = new NewsListAdapter(getApplicationContext(), this);
-        for(NewsItem newsItem : newsItems) {
+        for(NewsListItem newsItem : newsItems) {
             adapter.add(newsItem);
         }
         binding.listNews.setAdapter(adapter);
@@ -58,7 +57,7 @@ public class SchoolNewsActivity extends AppCompatActivity implements NewsActivit
 
     /// NewsActivityListener
     @Override
-    public void onTapNews(NewsItem newsItems) {
+    public void onTapNews(NewsListItem newsItems) {
         //TODO ここで詳細画面へ遷移
         Intent intent = new Intent(getApplicationContext(), NewsActivity.class);
         intent.putExtra("id", newsItems.getId());

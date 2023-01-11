@@ -68,36 +68,46 @@ public class TeacherIdentificationActivity extends AppCompatActivity {
             password = inputPass.getText().toString();
 
             if("".equals(password)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(TeacherIdentificationActivity.this);
-                builder.setTitle("確認").setMessage("正しいパスワードを入力してください。")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                builder.show();
+                showAlertListener();
                 return;
             }
-            //TODO: パスワード（サーバーにリクエスト）
+            //TODO: パスワード
+            if(password.equals(preferenceManager.getString(Constants.KEY_TEACHER_PASSWORD))) {
+                preferenceManager.putBoolean(Constants.KEY_LOGINED, true);
+                preferenceManager.putBoolean(Constants.IS_TEACHER, true);
 
-            preferenceManager.putBoolean(Constants.KEY_LOGINED, true);
-            preferenceManager.putBoolean(Constants.IS_TEACHER, true);
-
-            // FireStoreのユーザ情報に教員であることを追加する。
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
-            DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USER)
-                    .document(preferenceManager.getString(Constants.KEY_USER_ID));
-            documentReference.update(Constants.IS_TEACHER, true);
-
-
+                // FireStoreのユーザ情報に教員であることを追加する。
+                FirebaseFirestore database = FirebaseFirestore.getInstance();
+                DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USER)
+                        .document(preferenceManager.getString(Constants.KEY_USER_ID));
+                documentReference.update(Constants.IS_TEACHER, true);
 
 
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                showAlertListener();
+            }
+
+
+
 
         });
+    }
+
+    private void showAlertListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(TeacherIdentificationActivity.this);
+        builder.setTitle("確認").setMessage("正しいパスワードを入力してください。")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        builder.show();
     }
 
 //    private void setSpinner() {

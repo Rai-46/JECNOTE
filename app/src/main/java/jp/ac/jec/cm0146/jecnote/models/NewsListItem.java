@@ -1,6 +1,6 @@
 package jp.ac.jec.cm0146.jecnote.models;
 
-public class NewsItem {
+public class NewsListItem {
     private String  id;
     private String title;
 

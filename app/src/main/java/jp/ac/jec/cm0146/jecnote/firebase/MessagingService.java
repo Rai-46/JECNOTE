@@ -5,8 +5,10 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -19,10 +21,14 @@ import java.util.Random;
 
 import jp.ac.jec.cm0146.jecnote.R;
 import jp.ac.jec.cm0146.jecnote.activities.ChatActivity;
+import jp.ac.jec.cm0146.jecnote.activities.MainActivity;
+import jp.ac.jec.cm0146.jecnote.databinding.ActivityMainBinding;
 import jp.ac.jec.cm0146.jecnote.models.StudentUser;
 import jp.ac.jec.cm0146.jecnote.utilities.Constants;
 
 public class MessagingService extends FirebaseMessagingService {
+
+
 
     @Override
     public void onNewToken(@NonNull String token) {
@@ -32,6 +38,10 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
+        //TODO チャットアイコンを通知アイコンに変える
+        //TODO ここでいいのか。。？？
+
 
         // Studentとしているが、全ユーザ自分自身
         StudentUser user = new StudentUser();

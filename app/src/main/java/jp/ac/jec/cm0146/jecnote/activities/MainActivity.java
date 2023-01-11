@@ -2,6 +2,7 @@ package jp.ac.jec.cm0146.jecnote.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,7 +21,6 @@ import jp.ac.jec.cm0146.jecnote.adapters.MenuListAdapter;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivityMainBinding;
 import jp.ac.jec.cm0146.jecnote.listener.MainActivityListener;
 import jp.ac.jec.cm0146.jecnote.models.MenuItems;
-import jp.ac.jec.cm0146.jecnote.utilities.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity implements MainActivityListener {
 
@@ -30,16 +31,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     private static final int MENU_NEWS = 2;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 //         \u000d
 
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
 
         setListener();
         setList();
@@ -53,10 +53,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         });
     }
 
+//    public Context getContext() {
+//        return getApplicationContext();
+//    }
+
     private void setList() {
         ArrayList<MenuItems> items = new ArrayList<>(Arrays.asList(
                 new MenuItems().setId(MENU_GUIDE).setMenuTitle("学園生活ガイド").setMenuImage(R.drawable.lifeguide_2019),
-                new MenuItems().setId(MENU_NEWS).setMenuTitle("学校からの連絡")
+                new MenuItems().setId(MENU_NEWS).setMenuTitle("学校からの連絡").setMenuImage(R.drawable.twitter_kakouzumi)
         ));
         MenuListAdapter adapter = new MenuListAdapter(getApplicationContext(), this);
         for (MenuItems data: items) {
@@ -86,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
             startActivity(intent);
         }
     }
-
 
     // URLから画像をImageViewに追加する
     // TODO AsyncTaskが非推奨だから、余裕があれば直す！

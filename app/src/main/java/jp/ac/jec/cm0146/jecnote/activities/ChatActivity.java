@@ -192,11 +192,18 @@ public class ChatActivity extends AppCompatActivity {
 
         // databaseのコレクションに追加
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+
+        // conversionIDを更新する？
+//        if(conversionId == null) {
+//            checkForConversion();
+//        }
+
         // null出ない = 以前にも話したことがあるユーザ
         if(conversionId != null) {// TODO ここの条件が甘い、、別端末からチャットを始めるとここを通らず、新規ユーザとして追加されて、chatListに同じユーザが複数登録されてしまう
             // 更新する
             updateConversion(binding.inputMessage.getText().toString());
         } else {// conversionIdがNull = 初めて話すユーザ
+            // TODO ここで、もし別端末からログインをしていたならば、conversionIDをどうにかして取得せねばならない（自分とチャット相手のルームID的なやつ）
             HashMap<String, Object> conversion = new HashMap<>();
             conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
             conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_USER_NAME));
