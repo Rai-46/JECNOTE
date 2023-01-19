@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.PrecomputedText;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -76,11 +77,15 @@ public class TeacherIdentificationActivity extends AppCompatActivity {
                 preferenceManager.putBoolean(Constants.KEY_LOGINED, true);
                 preferenceManager.putBoolean(Constants.IS_TEACHER, true);
 
-                // FireStoreのユーザ情報に教員であることを追加する。
+                // FireStoreのユーザ情報に教員であることを追加する。アカウントが完成したことも
+                HashMap<String , Object> map = new HashMap<>();
+                map.put(Constants.IS_TEACHER, true);
+                map.put(Constants.ACCOUNT_SETTING_END, true);
+
                 FirebaseFirestore database = FirebaseFirestore.getInstance();
                 DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USER)
                         .document(preferenceManager.getString(Constants.KEY_USER_ID));
-                documentReference.update(Constants.IS_TEACHER, true);
+                documentReference.update(map);
 
 
 
@@ -88,11 +93,14 @@ public class TeacherIdentificationActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+
+
             } else {
                 showAlertListener();
             }
 
-
+            Log.i("inputPass", password);
+            Log.i("correctPass", preferenceManager.getString(Constants.KEY_TEACHER_PASSWORD));
 
 
         });

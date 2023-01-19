@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bgcolor"
-    tools:context=".activities.SchoolNewsActivity">
+    tools:context=".activities.GuideView">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
@@ -16,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <ImageButton
                 android:id="@+id/backBtn"
@@ -28,13 +27,12 @@
                 android:src="@drawable/ic_baseline_arrow_back_24"
                 tools:ignore="ContentDescription"/>
 
-
             <TextView
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="25sp"
                 android:layout_gravity="center"
-                android:text="学校からの連絡"
                 android:fontFamily="@font/zenmarugothic_medium"
                 android:textColor="@color/white"/>
 
@@ -43,14 +41,14 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
+
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
-    <ListView
-        android:id="@+id/listNews"
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@null"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

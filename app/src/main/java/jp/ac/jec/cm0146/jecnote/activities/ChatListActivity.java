@@ -53,6 +53,9 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
     }
 
     private void init() {
+
+        // TODO ここで、1人も未読の人がいなかった時に、preferenceをfalseにする
+
         conversations = new ArrayList<>();
         conversationsAdapter = new RecentConversationsAdapter(conversations, this, ChatListActivity.this);
         // RecyclerViewにconversationsAdapterをセット（ListViewみたいなやつ）
@@ -131,7 +134,7 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
                         chatMessage.setFirstSenderId(documentChange.getDocument().getString(Constants.KEY_USER_ID));
                         // 最初の送り主名前は、自分の名前
                         chatMessage.setFirstSenderName(documentChange.getDocument().getString(Constants.KEY_USER_NAME));
-                    } else {// 自分以外が送り主だった時
+                    } else {// 自分以外が送り主だった時（自分が受け取り主？）
                         // 送り主のアイコンを代入
                         chatMessage.setFirstReceiverImage(documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE));
                         // 送り主の名前を代入
@@ -179,6 +182,8 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
                         }
                     }
                 }
+
+
             }
             // 並び替えてるけど、、日付で並び替えてる？
             Collections.sort(conversations, (obj1, obj2) -> obj2.getDateObject().compareTo(obj1.getDateObject()));
@@ -188,7 +193,6 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
             binding.conversationsRecyclerView.smoothScrollToPosition(0);
             // recyclerViewを表示
             binding.conversationsRecyclerView.setVisibility(View.VISIBLE);
-            // TODO ここでMainActivityのアイコン変える？？
 
         }
     };

@@ -46,7 +46,7 @@ public class SchoolNewsActivity extends AppCompatActivity implements SchoolNewsA
 
     private void setList(String json) {
 
-        ArrayList<NewsListItem> newsItems = JsonHelper.parseListJson(json);
+        ArrayList<NewsListItem> newsItems = JsonHelper.parseNewsListJson(json);
         NewsListAdapter adapter = new NewsListAdapter(getApplicationContext(), this);
         for(NewsListItem newsItem : newsItems) {
             adapter.add(newsItem);
@@ -58,7 +58,6 @@ public class SchoolNewsActivity extends AppCompatActivity implements SchoolNewsA
     /// NewsActivityListener
     @Override
     public void onTapNews(NewsListItem newsItems) {
-        //TODO ここで詳細画面へ遷移
         Intent intent = new Intent(getApplicationContext(), NewsActivity.class);
         intent.putExtra("id", newsItems.getId());
         intent.putExtra("title", newsItems.getTitle());

@@ -25,6 +25,7 @@ import jp.ac.jec.cm0146.jecnote.activities.MainActivity;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivityMainBinding;
 import jp.ac.jec.cm0146.jecnote.models.StudentUser;
 import jp.ac.jec.cm0146.jecnote.utilities.Constants;
+import jp.ac.jec.cm0146.jecnote.utilities.PreferenceManager;
 
 public class MessagingService extends FirebaseMessagingService {
 
@@ -39,9 +40,9 @@ public class MessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        //TODO チャットアイコンを通知アイコンに変える
-        //TODO ここでいいのか。。？？
-
+        // sharedPreferenceで動的には無理だけれど実装できるかも、チャットアイコン
+        PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
+        preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, true);
 
         // Studentとしているが、全ユーザ自分自身
         StudentUser user = new StudentUser();

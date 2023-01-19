@@ -150,6 +150,14 @@ public class LoginActivity extends AppCompatActivity {
                                                 preferenceManager.putString(Constants.KEY_USER_EMAIL, documentSnapshot.getString(Constants.KEY_USER_EMAIL));
                                                 preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
 
+                                                //TODO アカウント設定が完了しているのか
+                                                if(documentSnapshot.getBoolean(Constants.ACCOUNT_SETTING_END) == null) {
+                                                        Intent intent = new Intent(LoginActivity.this, UserIdentificationActivity.class);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    return;
+                                                }
 
                                                 Log.i("pray", "アカウントあるかつ再インストールはここに入っていてほしい");
 
@@ -164,29 +172,30 @@ public class LoginActivity extends AppCompatActivity {
                                                     Log.i("fuga", "153");
                                                     preferenceManager.putBoolean(Constants.IS_TEACHER, documentSnapshot.getBoolean(Constants.IS_TEACHER));
                                                 } else {
-                                                    // 学生？先生？
-                                                    if (Constants.SELECTED_TEACHER.equals(preferenceManager.getString(Constants.WHICH_SELECT))) {// 先生で、サインインを完了させないで、アプリを起動した場合
-                                                        Log.i("fuga", "158");
-                                                        Intent intent = new Intent(getApplicationContext(), UserIdentificationActivity.class);
-                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                        startActivity(intent);
-                                                        finish();
-                                                        return;
-                                                    }
-                                                    Log.i("fuga", "165");
-                                                    if(Constants.SELECTED_STUDENT.equals(preferenceManager.getString(Constants.WHICH_SELECT))) {// 学生で、サインインを完了させないで再度アプリを起動した場合
+//                                                    // 学生？先生？
+//                                                    if (Constants.SELECTED_TEACHER.equals(preferenceManager.getString(Constants.WHICH_SELECT))) {// 先生で、サインインを完了させないで、アプリを起動した場合
+//                                                        Log.i("fuga", "158");
+//                                                        Intent intent = new Intent(getApplicationContext(), UserIdentificationActivity.class);
+//                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                                        startActivity(intent);
+//                                                        finish();
+//                                                        return;
+//                                                    }
+//                                                    Log.i("fuga", "165");
+//                                                    if(Constants.SELECTED_STUDENT.equals(preferenceManager.getString(Constants.WHICH_SELECT))) {// 学生で、サインインを完了させないで再度アプリを起動した場合
+//
+//                                                    }
 
-                                                    }
+                                                    //TODO ここに入ってくるのは、firebaseに同じEmailのユーザがいる　かつ、　先生ではないということ。
+                                                    preferenceManager.putBoolean(Constants.IS_TEACHER, false);
+
+
                                                 }
-
 
                                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 startActivity(intent);
                                                 finish();
-
-
-
 
                                             } else {// アカウント新規登録
 
@@ -218,22 +227,13 @@ public class LoginActivity extends AppCompatActivity {
                                                 binding.progressSpaceTop.setVisibility(View.GONE);
                                                 binding.progressSpaceBottom.setVisibility(View.GONE);
 
-
-
                                                 Intent intent = new Intent(LoginActivity.this, UserIdentificationActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 startActivity(intent);
                                                 finish();
-
-
-
                                             }
                                         }
                                     });
-
-
-
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("LOGIN", "signInWithCredential:failure", task.getException());
@@ -269,7 +269,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // ログインしたことがあるか？（同じ端末でアプリを開き直した時の）
+        // ログインしたことがあるか？（同じ端末でアプリを開き直した時の）アカウント情報の更新してる
         if((preferenceManager.getBoolean(Constants.KEY_LOGINED) != null) && preferenceManager.getBoolean(Constants.KEY_LOGINED)) {
             Log.i("fuga", "214");
             // FireStoreに登録するための準備

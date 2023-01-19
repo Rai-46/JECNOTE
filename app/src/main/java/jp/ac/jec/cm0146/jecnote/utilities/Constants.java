@@ -12,6 +12,8 @@ public class Constants {
     public static final String KEY_TEACHER_PASSWORD = "teacherPass";
     public static final String VALUE_TEACHER_PASSWORD = "password";
 
+    public static final String ACCOUNT_SETTING_END = "accountSettingEnd";
+
     public static final String KEY_LOGINED = "logined";
     public static final String KEY_USER_NAME = "user";
     public static final String KEY_USER_IMAGE = "userImage";
@@ -56,6 +58,8 @@ public class Constants {
     public static final String DB_TIME_STAMP = "TimeStamp";
     public static final String DB_MESSAGE_DATA = "Message";
     public static final String DB_UPDATED_DATE = "UpdateDate";
+
+    public static final String FCM_RECEIVED_MESSAGE = "receivedMessage";
 
 
 

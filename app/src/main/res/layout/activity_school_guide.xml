@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/bgcolor"
     tools:context=".activities.SchoolGuideActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -21,21 +22,21 @@
                 android:id="@+id/backBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
                 android:layout_gravity="center"
+                android:layout_marginEnd="20dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_baseline_arrow_back_24"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
                 android:layout_gravity="center"
-                android:text="学園生活ガイド"
                 android:fontFamily="@font/zenmarugothic_medium"
-                android:textColor="@color/white"/>
+                android:text="学園生活ガイド"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
 
             <View
                 android:layout_width="0dp"
@@ -45,5 +46,45 @@
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="?attr/textInputOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputKeyword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:imeOptions="actionGo"
+            android:hint="検索"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textColor="@color/textError"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:text="入力された文字は含まれていません。"
+        android:fontFamily="@font/zenmarugothic_medium"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:divider="@null"/>
 
 </LinearLayout>

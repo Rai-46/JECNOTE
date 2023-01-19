@@ -51,7 +51,7 @@ public class AsyncNewsDataRequest extends AsyncTask<Uri.Builder, Void, NewsDataI
                 con.disconnect();
             }
         }
-        NewsDataItem item = JsonHelper.parseDataJson(resStr);
+        NewsDataItem item = JsonHelper.parseNewsDataJson(resStr);
         return item;
     }
 

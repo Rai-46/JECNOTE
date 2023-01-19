@@ -7,10 +7,37 @@
     android:orientation="vertical"
     tools:context=".activities.StudentIdentificationActivity">
 
-    <View
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/attentionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="あなたは学生ですか？"
+            android:textSize="25sp"
+            android:textColor="@color/textValue"
+            android:fontFamily="@font/zenmarugothic_medium"/>
+
+        <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Welcome to JECNOTE!"
+            android:textSize="25sp"
+            android:textColor="@color/MainColor"
+            android:visibility="gone"
+            android:fontFamily="@font/zenmarugothic_medium"/>
+
+
+
+    </LinearLayout>
 
 
     <LinearLayout

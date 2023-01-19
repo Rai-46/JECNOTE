@@ -93,6 +93,8 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             自分がラストメッセージなら、非表示
              */
 
+
+
             Log.i("FirestoreCheck", "-------------------------------------");
 
                 if (preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.getLastSenderID())) {
@@ -100,6 +102,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
 
                     binding.resentMessage.setText("");
                     binding.messageBatch.setVisibility(View.GONE);
+                    preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, false);
                 } else {
                     Log.i("FirestoreCheck", "相手ラストメッセージ");
                     if(!chatMessage.getIsRead()) {
@@ -108,9 +111,11 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                         binding.resentMessage.setText("新着メッセージがあります。");
 
                         binding.messageBatch.setVisibility(View.VISIBLE);
-                    } else {
+                        preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, true);
+                    } else {// 相手からのメッセージを既読した
                         binding.resentMessage.setText("");
                         binding.messageBatch.setVisibility(View.GONE);
+                        preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, false);
                     }
                 }
 

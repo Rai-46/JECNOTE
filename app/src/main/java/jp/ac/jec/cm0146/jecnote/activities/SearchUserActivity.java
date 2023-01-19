@@ -74,7 +74,6 @@ public class SearchUserActivity extends AppCompatActivity implements SearchUserA
 
     private void setListener() {
         binding.backBtn.setOnClickListener(v -> finish());
-        // TODO: 急にこのメソッドが聞かなくなった、なんで？さっきまで動いていたのに。
         binding.searchFromSchoolID.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

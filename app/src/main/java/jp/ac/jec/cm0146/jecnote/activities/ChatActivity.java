@@ -108,6 +108,8 @@ public class ChatActivity extends AppCompatActivity {
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
 
+        // 一度ここで、アプリ内通知バッチのpreferenceをfalseにする
+        preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, false);
 
     }
 
@@ -250,6 +252,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendNotification(String messageBody) {
+        Log.i("testNotificationBody", "body : " + messageBody);
         ApiClient.getClient().create(ApiService.class).sendMessage(
                 Constants.getRemoteMsgHeaders(),
                 messageBody

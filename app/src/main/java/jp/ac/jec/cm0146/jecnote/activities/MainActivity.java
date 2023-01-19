@@ -21,10 +21,14 @@ import jp.ac.jec.cm0146.jecnote.adapters.MenuListAdapter;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivityMainBinding;
 import jp.ac.jec.cm0146.jecnote.listener.MainActivityListener;
 import jp.ac.jec.cm0146.jecnote.models.MenuItems;
+import jp.ac.jec.cm0146.jecnote.utilities.Constants;
+import jp.ac.jec.cm0146.jecnote.utilities.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity implements MainActivityListener {
 
     private ActivityMainBinding binding;
+
+    private PreferenceManager preferenceManager;
 
 
     private static final int MENU_GUIDE = 1;
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        preferenceManager = new PreferenceManager(getApplicationContext());
+
         setListener();
         setList();
 
@@ -50,7 +56,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         binding.sendChatActivity.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), ChatListActivity.class);
             startActivity(intent);
+
+            // FIXME デバック用
+            preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, false);
+
         });
+
+
     }
 
 //    public Context getContext() {
@@ -73,7 +85,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     @Override
     protected void onResume() {
         super.onResume();
-
+        if(!preferenceManager.getBoolean(Constants.FCM_RECEIVED_MESSAGE) || preferenceManager.getBoolean(Constants.FCM_RECEIVED_MESSAGE) == null) {
+            // 未読 or null
+            binding.sendChatActivity.setImageResource(R.drawable.ic_outline_chat_bubble_outline_24);
+        } else {
+            // 既読
+            binding.sendChatActivity.setImageResource(R.drawable.ic_outline_mark_chat_unread_24);
+        }
     }
 
     // MainActivityListener
