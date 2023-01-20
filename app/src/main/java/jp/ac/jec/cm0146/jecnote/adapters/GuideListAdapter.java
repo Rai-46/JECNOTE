@@ -21,7 +21,7 @@ public class GuideListAdapter extends ArrayAdapter<GuideItem> {
     private SchoolGuideActivity activity;
 
     public GuideListAdapter(@NonNull Context context, SchoolGuideActivity activity) {
-        super(context, R.layout.news_activity_item); // レイアウトはニュースのを借りる
+        super(context, R.layout.guide_activity_item); // レイアウトはニュースのを借りる
         this.activity = activity;
     }
 
@@ -31,11 +31,19 @@ public class GuideListAdapter extends ArrayAdapter<GuideItem> {
         GuideItem guideItems = getItem(position);
         if(convertView == null) {
             LayoutInflater inflater = activity.getLayoutInflater();
-            convertView = inflater.inflate(R.layout.news_activity_item, null);
+            convertView = inflater.inflate(R.layout.guide_activity_item, null);
         }
         if(guideItems != null) {
             TextView title = convertView.findViewById(R.id.newsTitle);
             title.setText(guideItems.getTitle());
+
+            if(guideItems.getHit() != 0) {
+                TextView hitText = convertView.findViewById(R.id.hit);
+                hitText.setText("件数: " + guideItems.getHit());
+                hitText.setVisibility(View.VISIBLE);
+            } else {
+                convertView.findViewById(R.id.hit).setVisibility(View.INVISIBLE);
+            }
 
             convertView.setOnClickListener(v -> activity.onTapItem(guideItems));
         }

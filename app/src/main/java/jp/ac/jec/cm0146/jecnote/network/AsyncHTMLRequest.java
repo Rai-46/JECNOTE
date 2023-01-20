@@ -68,7 +68,7 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
                 .replace("\\n", "")
                 .replace("\\t", "")
                 .replace("<head>", "<head><meta name=\"viewport\" content=\"width=device-width\">")
-                .replace("<html>", "<html><style>span { color: red; }</style>");
+                .replace("<html>", "<html><style>span { color: red; } </style>");
 
         replace = protectHTML(replace);
 
@@ -90,9 +90,12 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
 
     private String protectHTML(String html) {
         List list = new ArrayList();
+
         String pattern = "<[^>]*>"; // 正規表現
         Pattern p = Pattern.compile(pattern); // 正規表現をコンパイルする？
         Matcher m = p.matcher(html); // コンパイルされたやつをhtmlから探す
+
+        Log.i("もと", html);
 
         while (m.find()) {
             list.add(m.group());
@@ -103,18 +106,24 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
 
         html = html.replaceAll(pattern, "<>");
 
+        Log.i("この時点", html);
+
+        // TODO 今、<style>の中身を??にしているけど、htmlファイルの中に??があったら、listAPIの時にヒットしてしまって、多分エラーになってしまう。。。
+        html = html.replace("span { color: red; } " , "??");
+
         if(!"".equals(keyword)) {
             html = html
                     .replace(keyword, "<span><b>" + keyword + "</b></span>");
         }
 
-//        System.out.println("replaceALL : " + html);
+
+
         for(int i = 0; i < images.length; i++) {
             html = html.replaceFirst("<>", images[i]);
-            System.out.println(images[i]);
-
         }
-//        System.out.println("完成 ; " + html);
+
+        html = html.replace("??", "span { color: red; } ");
+        Log.i("完成", html);
 
         return html;
     }

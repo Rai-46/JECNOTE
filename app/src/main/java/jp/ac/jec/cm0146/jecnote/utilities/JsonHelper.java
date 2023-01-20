@@ -77,6 +77,7 @@ public class JsonHelper {
         item.setId(json.getString("id"));
         item.setTitle(json.getString("title"));
         item.setOrderNum(json.getString("orderNum"));
+        item.setHit(json.getString("hit"));
 
         return item;
     }

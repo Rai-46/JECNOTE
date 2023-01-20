@@ -4,6 +4,15 @@ public class GuideItem {
     private int id;
     private int orderNum;
     private String title;
+    private int hit;
+
+    public int getHit() {
+        return hit;
+    }
+
+    public void setHit(String hit) {
+        this.hit = Integer.parseInt(hit);
+    }
 
     public int getId() {
         return id;

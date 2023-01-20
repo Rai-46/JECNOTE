@@ -31,6 +31,7 @@
         <entry key="app/src/main/res/layout/activity_student_identification.xml" value="0.23486531575520841" />
         <entry key="app/src/main/res/layout/activity_teacher_identification.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_user_identification.xml" value="0.17341515768905225" />
+        <entry key="app/src/main/res/layout/guide_activity_item.xml" value="0.23177083333333334" />
         <entry key="app/src/main/res/layout/item_container_recent_conversion.xml" value="0.26626617873924363" />
         <entry key="app/src/main/res/layout/item_conteiner_recieved_message.xml" value="0.19510202853479117" />
         <entry key="app/src/main/res/layout/item_conteiner_sent_message.xml" value="0.23174336751302088" />
