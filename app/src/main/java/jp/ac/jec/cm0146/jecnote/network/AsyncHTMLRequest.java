@@ -72,12 +72,6 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
 
         replace = protectHTML(replace);
 
-//        if(!"".equals(keyword)) {
-//            replace = replace
-//                    .replace("<html>", "<html><style>span { color: red; }</style>")
-//                    .replace(keyword, "<span><b>" + keyword + "</b></span>");
-//        }
-
 
         WebView wv = binding.webView;
         WebSettings settings = wv.getSettings();
@@ -108,7 +102,6 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
 
         Log.i("この時点", html);
 
-        // TODO 今、<style>の中身を??にしているけど、htmlファイルの中に??があったら、listAPIの時にヒットしてしまって、多分エラーになってしまう。。。
         html = html.replace("span { color: red; } " , "??");
 
         if(!"".equals(keyword)) {

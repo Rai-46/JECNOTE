@@ -32,8 +32,6 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-<!--        TODO ボタンは画像つき、または角丸デザインなどに変更する！-->
-
         <Button
             android:id="@+id/BtnTeacher"
             android:layout_width="0dp"

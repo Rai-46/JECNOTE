@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.setLanguageCode("ja");
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+                .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().setHostedDomain("jec.ac.jp").build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         setTeacherIdentification();
@@ -152,10 +152,10 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 //TODO アカウント設定が完了しているのか
                                                 if(documentSnapshot.getBoolean(Constants.ACCOUNT_SETTING_END) == null) {
-                                                        Intent intent = new Intent(LoginActivity.this, UserIdentificationActivity.class);
-                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                        startActivity(intent);
-                                                        finish();
+                                                    Intent intent = new Intent(LoginActivity.this, UserIdentificationActivity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    startActivity(intent);
+                                                    finish();
                                                     return;
                                                 }
 
