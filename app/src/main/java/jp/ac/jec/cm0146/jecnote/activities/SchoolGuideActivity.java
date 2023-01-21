@@ -65,7 +65,6 @@ public class SchoolGuideActivity extends AppCompatActivity implements SchoolGuid
         }
         binding.listView.setAdapter(adapter);
 
-        // TODO 成功したらprogressBarを消して、ListView表示。中身がなかったら（検索した文字が存在しない）ときはerrorMessageを表示。
 
         if(guideItems.isEmpty()) {
             binding.errorMessage.setVisibility(View.VISIBLE);

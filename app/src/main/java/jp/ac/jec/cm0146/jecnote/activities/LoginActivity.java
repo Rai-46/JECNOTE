@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 preferenceManager.putString(Constants.KEY_USER_EMAIL, documentSnapshot.getString(Constants.KEY_USER_EMAIL));
                                                 preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
 
-                                                //TODO アカウント設定が完了しているのか
+                                                // アカウント設定が完了しているのか
                                                 if(documentSnapshot.getBoolean(Constants.ACCOUNT_SETTING_END) == null) {
                                                     Intent intent = new Intent(LoginActivity.this, UserIdentificationActivity.class);
                                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -186,7 +186,7 @@ public class LoginActivity extends AppCompatActivity {
 //
 //                                                    }
 
-                                                    //TODO ここに入ってくるのは、firebaseに同じEmailのユーザがいる　かつ、　先生ではないということ。
+                                                    // ここに入ってくるのは、firebaseに同じEmailのユーザがいる　かつ、　先生ではないということ。
                                                     preferenceManager.putBoolean(Constants.IS_TEACHER, false);
 
 

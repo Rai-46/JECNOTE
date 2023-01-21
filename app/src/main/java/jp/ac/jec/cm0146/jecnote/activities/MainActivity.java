@@ -57,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
             Intent intent = new Intent(getApplicationContext(), ChatListActivity.class);
             startActivity(intent);
 
-            // FIXME デバック用
-            preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, false);
-
         });
 
 

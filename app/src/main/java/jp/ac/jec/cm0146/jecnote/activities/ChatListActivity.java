@@ -54,8 +54,6 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
 
     private void init() {
 
-        // TODO ここで、1人も未読の人がいなかった時に、preferenceをfalseにする
-
         conversations = new ArrayList<>();
         conversationsAdapter = new RecentConversationsAdapter(conversations, this, ChatListActivity.this);
         // RecyclerViewにconversationsAdapterをセット（ListViewみたいなやつ）

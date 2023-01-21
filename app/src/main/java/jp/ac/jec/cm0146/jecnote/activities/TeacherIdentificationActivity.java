@@ -63,7 +63,7 @@ public class TeacherIdentificationActivity extends AppCompatActivity {
         binding.nextBtn.setOnClickListener(v -> {
 
             String password = "";
-            //TODO: 間違っていたor未入力はダイヤログ表示
+            // 間違っていたor未入力はダイヤログ表示
 
             TextView inputPass = (TextView) findViewById(R.id.identificationPassword);
             password = inputPass.getText().toString();
@@ -72,7 +72,7 @@ public class TeacherIdentificationActivity extends AppCompatActivity {
                 showAlertListener();
                 return;
             }
-            //TODO: パスワード
+            // パスワード
             if(password.equals(preferenceManager.getString(Constants.KEY_TEACHER_PASSWORD))) {
                 preferenceManager.putBoolean(Constants.KEY_LOGINED, true);
                 preferenceManager.putBoolean(Constants.IS_TEACHER, true);
