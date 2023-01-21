@@ -30,17 +30,21 @@ import jp.ac.jec.cm0146.jecnote.databinding.ActivitySearchUserBinding;
 import jp.ac.jec.cm0146.jecnote.listener.SearchUserActivityListener;
 import jp.ac.jec.cm0146.jecnote.models.StudentUser;
 import jp.ac.jec.cm0146.jecnote.utilities.Constants;
+import jp.ac.jec.cm0146.jecnote.utilities.PreferenceManager;
 
 public class SearchUserActivity extends AppCompatActivity implements SearchUserActivityListener {
 
     private ActivitySearchUserBinding binding;
     private InputMethodManager mInputMethodManager;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySearchUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        preferenceManager = new PreferenceManager(getApplicationContext());
 
         init();
         setListener();
@@ -103,9 +107,11 @@ public class SearchUserActivity extends AppCompatActivity implements SearchUserA
 
         isLoading(true);
 
+
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USER)
                 .orderBy(Constants.KEY_USER_EMAIL)
+                .whereNotEqualTo(Constants.KEY_USER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL))
                 .startAt(keyword)
                 .endAt(keyword + "\uf8ff")
                 .get()
