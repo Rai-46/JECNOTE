@@ -24,6 +24,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -297,22 +298,29 @@ public class LoginActivity extends AppCompatActivity {
                             Log.i("fuga", "238");
                             // この端末でログインしていたならば、MainActivityに遷移
 
-                            if(mAuth.getCurrentUser() != null) {
-
-                                if (userName.equals(mAuth.getCurrentUser().getDisplayName())) {// 名前の変更があれば、
-                                    Log.i("fuga", "224");
-                                    // preferenceに再登録
-                                    preferenceManager.putString(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
-                                    // firestoreに再登録
-                                    map.put(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
-                                }
-                                if (userImage.equals(mAuth.getCurrentUser().getPhotoUrl())) {// アイコンの変更があれば、
-                                    Log.i("fuga", "231");
-                                    preferenceManager.putString(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
-                                    map.put(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
-                                }
-                            }
-
+//                            if(mAuth.getCurrentUser() != null) {// サインインしている
+//                                Log.i("fuga", "getCurrentUser not null");
+//
+//                                if (!userName.equals(mAuth.getCurrentUser().getDisplayName())) {// 名前の変更があれば、
+//                                    Log.i("fuga", "224");
+//                                    Log.i("fuga", mAuth.getCurrentUser().getDisplayName());
+//
+//                                    // preferenceに再登録
+//                                    preferenceManager.putString(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
+//                                    // firestoreに再登録
+//                                    map.put(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
+//                                }
+//                                if (!userImage.equals(mAuth.getCurrentUser().getPhotoUrl())) {// アイコンの変更があれば、
+//                                    Log.i("fuga", "231");
+//                                    preferenceManager.putString(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
+//                                    map.put(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
+//                                }
+//                            }
+//
+//                            // TODO 自分のアカウント更新をfirebaseにアップロードしないといけない
+//                            DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USER)
+//                                    .document(preferenceManager.getString(Constants.KEY_USER_ID));
+//                            documentReference.update(map);
 
                             Log.i("fuga", "241");
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

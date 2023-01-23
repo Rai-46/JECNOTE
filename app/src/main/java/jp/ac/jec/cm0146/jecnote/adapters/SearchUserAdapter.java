@@ -41,6 +41,7 @@ public class SearchUserAdapter extends ArrayAdapter<StudentUser> {
         if(user != null) {
             ImageView userImage = (ImageView) convertView.findViewById(R.id.userImage);
             new DownloadUserImage(userImage).execute(user.userImage);
+            Log.i("ユーザアイコン", user.userImage);
 
             TextView userName = (TextView) convertView.findViewById(R.id.userDisplayName);
             userName.setText(user.userDisplayName);
