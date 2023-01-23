@@ -29,11 +29,11 @@ public class UserIdentificationActivity extends AppCompatActivity {
     }
 
     private void setListener() {
-        binding.BtnTeacher.setOnClickListener(v -> {
-            preferenceManager.putString(Constants.WHICH_SELECT, Constants.SELECTED_TEACHER);
-            Intent intent = new Intent(getApplicationContext(), TeacherIdentificationActivity.class);
-            startActivity(intent);
-        });
+//        binding.BtnTeacher.setOnClickListener(v -> {
+//            preferenceManager.putString(Constants.WHICH_SELECT, Constants.SELECTED_TEACHER);
+//            Intent intent = new Intent(getApplicationContext(), TeacherIdentificationActivity.class);
+//            startActivity(intent);
+//        });
 
         binding.BtnStudent.setOnClickListener(v -> {
             preferenceManager.putString(Constants.WHICH_SELECT, Constants.SELECTED_STUDENT);

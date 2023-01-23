@@ -155,6 +155,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 // アカウント設定が完了しているのか
                                                 if(documentSnapshot.getBoolean(Constants.ACCOUNT_SETTING_END) == null) {
+
+                                                    Log.i("fuga", "ログイン後アカウント設定未完了");
                                                     Intent intent = new Intent(LoginActivity.this, UserIdentificationActivity.class);
                                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     startActivity(intent);
@@ -274,6 +276,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // ログインしたことがあるか？（同じ端末でアプリを開き直した時の）アカウント情報の更新してる
         if((preferenceManager.getBoolean(Constants.KEY_LOGINED) != null) && preferenceManager.getBoolean(Constants.KEY_LOGINED)) {
+            Log.i("fuga", "keylogined = " + preferenceManager.getBoolean(Constants.KEY_LOGINED));
 //            // ここでアカウントがFireStore上にあるかどうか
             database.collection(Constants.KEY_COLLECTION_USER)
                     .whereEqualTo(Constants.KEY_USER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL))
@@ -288,11 +291,11 @@ public class LoginActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            HashMap<String, Object> map = new HashMap<>();
-
-                            // アカウントの更新を確認する
-                            String userName = preferenceManager.getString(Constants.KEY_USER_NAME);
-                            String userImage = preferenceManager.getString(Constants.KEY_USER_IMAGE);
+//                            HashMap<String, Object> map = new HashMap<>();
+//
+//                            // アカウントの更新を確認する
+//                            String userName = preferenceManager.getString(Constants.KEY_USER_NAME);
+//                            String userImage = preferenceManager.getString(Constants.KEY_USER_IMAGE);
 
 
                             Log.i("fuga", "238");
@@ -322,10 +325,12 @@ public class LoginActivity extends AppCompatActivity {
 //                                    .document(preferenceManager.getString(Constants.KEY_USER_ID));
 //                            documentReference.update(map);
 
+
                             Log.i("fuga", "241");
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
+
                         }
                     });
 
