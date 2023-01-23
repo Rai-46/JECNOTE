@@ -112,7 +112,7 @@ public class SearchUserActivity extends AppCompatActivity implements SearchUserA
         database.collection(Constants.KEY_COLLECTION_USER)
                 .orderBy(Constants.KEY_USER_EMAIL)
                 .whereNotEqualTo(Constants.KEY_USER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL))// 自分と同じEmailを場外
-                .whereEqualTo(Constants.IS_TEACHER, null)// 教員ではない
+//                .whereEqualTo(Constants.IS_TEACHER, null)// 教員ではない
                 .startAt(keyword)
                 .endAt(keyword + "\uf8ff")
                 .get()

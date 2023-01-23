@@ -47,7 +47,6 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
 
 
         init();
-        getToken();
         setListener();
         listenConversations();
     }
@@ -195,17 +194,7 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
         }
     };
 
-    private void getToken() {
-        // 通知に必要なFCMトークン
-        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateTokens);
-    }
 
-    private void updateTokens(String token) {
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USER)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID));
-        documentReference.update(Constants.USER_FCM_TOKEN, token);
-    }
 
 //    @Override
 //    protected void onRestart(){

@@ -11,6 +11,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
         setListener();
         setList();
+        getToken();
 
     }
 
@@ -77,6 +82,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         }
         binding.menuItemList.setAdapter(adapter);
 
+    }
+
+    // TODO: もしかしたら、MainActivityに移動させるかも？？？
+    private void getToken() {
+        // 通知に必要なFCMトークン
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateTokens);
+    }
+
+    private void updateTokens(String token) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USER)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID));
+        documentReference.update(Constants.USER_FCM_TOKEN, token);
     }
 
     @Override

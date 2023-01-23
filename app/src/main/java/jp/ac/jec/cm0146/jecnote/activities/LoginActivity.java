@@ -62,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().setHostedDomain("jec.ac.jp").build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // FireStoreのインスタンス取得
+        database = FirebaseFirestore.getInstance();
+
         setTeacherIdentification();
         setListener();
 
@@ -130,8 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("LOGIN", "signInWithCredential:success");
 
-                            // FireStoreのインスタンス取得
-                            database = FirebaseFirestore.getInstance();
+
 
                             Log.i("comp", "userEmail " + userEmail);
 
@@ -271,40 +273,57 @@ public class LoginActivity extends AppCompatActivity {
 
         // ログインしたことがあるか？（同じ端末でアプリを開き直した時の）アカウント情報の更新してる
         if((preferenceManager.getBoolean(Constants.KEY_LOGINED) != null) && preferenceManager.getBoolean(Constants.KEY_LOGINED)) {
+//            // ここでアカウントがFireStore上にあるかどうか
+            database.collection(Constants.KEY_COLLECTION_USER)
+                    .whereEqualTo(Constants.KEY_USER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL))
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {
+
+                            } else {
+                                Log.i("fuga", "アカウントなし");
+                                return;
+                            }
+
+                            HashMap<String, Object> map = new HashMap<>();
+
+                            // アカウントの更新を確認する
+                            String userName = preferenceManager.getString(Constants.KEY_USER_NAME);
+                            String userImage = preferenceManager.getString(Constants.KEY_USER_IMAGE);
+
+
+                            Log.i("fuga", "238");
+                            // この端末でログインしていたならば、MainActivityに遷移
+
+                            if(mAuth.getCurrentUser() != null) {
+
+                                if (userName.equals(mAuth.getCurrentUser().getDisplayName())) {// 名前の変更があれば、
+                                    Log.i("fuga", "224");
+                                    // preferenceに再登録
+                                    preferenceManager.putString(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
+                                    // firestoreに再登録
+                                    map.put(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
+                                }
+                                if (userImage.equals(mAuth.getCurrentUser().getPhotoUrl())) {// アイコンの変更があれば、
+                                    Log.i("fuga", "231");
+                                    preferenceManager.putString(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
+                                    map.put(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
+                                }
+                            }
+
+
+                            Log.i("fuga", "241");
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                    });
+
+
             Log.i("fuga", "214");
-            // FireStoreに登録するための準備
-            database = FirebaseFirestore.getInstance();
-            HashMap<String, Object> map = new HashMap<>();
 
-            // アカウントの更新を確認する
-            String userName = preferenceManager.getString(Constants.KEY_USER_NAME);
-            String userImage = preferenceManager.getString(Constants.KEY_USER_IMAGE);
-
-
-            Log.i("fuga", "238");
-            // この端末でログインしていたならば、MainActivityに遷移
-
-            if(mAuth.getCurrentUser() != null) {
-
-                if (userName.equals(mAuth.getCurrentUser().getDisplayName())) {// 名前の変更があれば、
-                    Log.i("fuga", "224");
-                    // preferenceに再登録
-                    preferenceManager.putString(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
-                    // firestoreに再登録
-                    map.put(Constants.KEY_USER_NAME, mAuth.getCurrentUser().getDisplayName());
-                }
-                if (userImage.equals(mAuth.getCurrentUser().getPhotoUrl())) {// アイコンの変更があれば、
-                    Log.i("fuga", "231");
-                    preferenceManager.putString(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
-                    map.put(Constants.KEY_USER_IMAGE, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
-                }
-            }
-
-
-            Log.i("fuga", "241");
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
         }
 
     }

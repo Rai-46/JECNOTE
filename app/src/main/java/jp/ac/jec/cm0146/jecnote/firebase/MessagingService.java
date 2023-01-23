@@ -41,8 +41,8 @@ public class MessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         // sharedPreferenceで動的には無理だけれど実装できるかも、チャットアイコン
-        PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
-        preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, true);
+//        PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
+//        preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, true);
 
         // Studentとしているが、全ユーザ自分自身
         StudentUser user = new StudentUser();
