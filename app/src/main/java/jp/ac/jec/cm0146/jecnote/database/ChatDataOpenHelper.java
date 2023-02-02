@@ -55,8 +55,6 @@ public class ChatDataOpenHelper extends SQLiteOpenHelper {
 
         ArrayList<ChatMessage> ary = new ArrayList<>();
 
-        Log.i("abcdefg", "partnerID:" + partnerID + "\n");
-        Log.i("testData", "selectChatData");
 
         if(db == null) {
             return ary;
@@ -79,7 +77,6 @@ public class ChatDataOpenHelper extends SQLiteOpenHelper {
         } finally {
             db.close();
         }
-        Log.i("testData", "selectChatData return:" + ary);
 
         ary.sort((obj1, obj2) -> parseDate(obj1.getDateTime()).compareTo(parseDate(obj2.getDateTime())));
 
@@ -95,7 +92,6 @@ public class ChatDataOpenHelper extends SQLiteOpenHelper {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年 MM月 dd日 HH:mm:ss");
             date = sdf.parse(dateStr);
-//            Log.i("dateInfo", String.valueOf(date));
             return date;
 
         } catch (ParseException e ) {
@@ -130,8 +126,6 @@ public class ChatDataOpenHelper extends SQLiteOpenHelper {
     // insert message where partnerID
     public void insertMessageData(String partnerID, String senderID, String dateTime, String message ) {
         SQLiteDatabase db = getWritableDatabase();
-
-        Log.i("testData", "insertMessageData");
 
         String insertMessageData = "INSERT INTO " + Constants.DB_MESSAGE_TABLE + "(" +
                 Constants.DB_CHAT_ID + "," +

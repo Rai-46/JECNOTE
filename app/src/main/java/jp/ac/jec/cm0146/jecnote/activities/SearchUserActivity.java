@@ -119,12 +119,10 @@ public class SearchUserActivity extends AppCompatActivity implements SearchUserA
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful() && task.getResult() != null) {// データある
-                            Log.i("hogehoge", "94");
                             List<StudentUser> users = new ArrayList<>();
                             for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
                                 // 学生のユーザデータを格納
                                 StudentUser studentUser = new StudentUser();
-                                Log.i("hogehoge", "99");
                                 studentUser.userDisplayName = queryDocumentSnapshot.getString(Constants.KEY_USER_NAME);
                                 studentUser.userEmail = queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL);
                                 studentUser.userImage = queryDocumentSnapshot.getString(Constants.KEY_USER_IMAGE);
@@ -133,7 +131,6 @@ public class SearchUserActivity extends AppCompatActivity implements SearchUserA
                             }
                             if (users.size() > 0) {
                                 // ユーザ見つけた時
-                                Log.i("hogehoge", "107");
                                 // ここで、ListViewへセット
                                 SearchUserAdapter adapter = new SearchUserAdapter(getApplicationContext(), SearchUserActivity.this);
                                 for(StudentUser user : users) {

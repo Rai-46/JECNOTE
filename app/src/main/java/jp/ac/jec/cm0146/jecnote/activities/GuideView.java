@@ -3,8 +3,10 @@ package jp.ac.jec.cm0146.jecnote.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.gesture.GestureOverlayView;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import jp.ac.jec.cm0146.jecnote.databinding.ActivityGuideViewBinding;
@@ -45,6 +47,9 @@ public class GuideView extends AppCompatActivity {
         uriBuilder.authority("21cm0146.main.jp");
         uriBuilder.path("jecGuide/outputContents.php");
         uriBuilder.appendQueryParameter("id", String.valueOf(id));
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.webView.setVisibility(View.GONE);
 
 
         AsyncHTMLRequest req = new AsyncHTMLRequest(binding, keyword);

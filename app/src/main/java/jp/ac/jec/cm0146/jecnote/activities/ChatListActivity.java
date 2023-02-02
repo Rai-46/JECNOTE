@@ -147,7 +147,6 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
                     // 最後の送信ユーザ
                     chatMessage.setLastSenderID(documentChange.getDocument().getString(Constants.LAST_SEND_MESSAGE_USERID));
                     // isRead
-                    Log.i("isRead ChatListActivity", ":" + documentChange.getDocument().getBoolean(Constants.KEY_IS_READ));
                     chatMessage.setIsRead(documentChange.getDocument().getBoolean(Constants.KEY_IS_READ));
 
                     // ArrayListに追加
@@ -158,7 +157,6 @@ public class ChatListActivity extends AppCompatActivity implements ConversionLis
 
                         if(chatMessage.getSenderId().equals(cm.getSenderId()) && chatMessage.getReceiverId().equals(cm.getReceiverId())) {
                             // 待ってこれじゃダメかも -> いや、大丈夫そう（２回目）
-                            Log.i("butbut??", "入ってしまった、、、");
                             return;
                         }
                     }

@@ -99,10 +99,6 @@ public class TeacherIdentificationActivity extends AppCompatActivity {
                 showAlertListener();
             }
 
-            Log.i("inputPass", password);
-            Log.i("correctPass", preferenceManager.getString(Constants.KEY_TEACHER_PASSWORD));
-
-
         });
     }
 

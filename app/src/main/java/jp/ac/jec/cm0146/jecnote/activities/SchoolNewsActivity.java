@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,9 @@ public class SchoolNewsActivity extends AppCompatActivity implements SchoolNewsA
         uriBuilder.authority("21cm0146.main.jp");
         uriBuilder.path("jecnote/outputList.php");
 
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.listNews.setVisibility(View.GONE);
+
         AsyncNewsListRequest req = new AsyncNewsListRequest(this);
         req.execute(uriBuilder);
     }
@@ -52,6 +56,11 @@ public class SchoolNewsActivity extends AppCompatActivity implements SchoolNewsA
             adapter.add(newsItem);
         }
         binding.listNews.setAdapter(adapter);
+
+        if(!newsItems.isEmpty()) {
+            binding.progressBar.setVisibility(View.GONE);
+            binding.listNews.setVisibility(View.VISIBLE);
+        }
 
     }
 

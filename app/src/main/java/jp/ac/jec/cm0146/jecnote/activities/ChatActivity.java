@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import jp.ac.jec.cm0146.jecnote.R;
 import jp.ac.jec.cm0146.jecnote.adapters.ChatAdapter;
 import jp.ac.jec.cm0146.jecnote.database.ChatDataOpenHelper;
 import jp.ac.jec.cm0146.jecnote.databinding.ActivityChatBinding;
@@ -79,8 +80,6 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Log.i("fugafuga", "onCreate");
-
         loadReceiverDetails();
         init();
         setListener();
@@ -88,7 +87,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void init() {
-        Log.i("fugafuga", "init()");
 
         chatDataOpenHelper = new ChatDataOpenHelper(getApplicationContext());
 
@@ -99,7 +97,6 @@ public class ChatActivity extends AppCompatActivity {
         // チャットデータを格納するArrayList
         chatMessages = new ArrayList<>();
 //        chatMessages = chatDataOpenHelper.selectChatData(receiverUser.id);
-        Log.i("testDatabase", "chatMessages:" + chatMessages + " " + receiverUser.id);
         // アダプターを定義
         chatAdapter = new ChatAdapter(
                 chatMessages,
@@ -115,7 +112,6 @@ public class ChatActivity extends AppCompatActivity {
 
     // Intentで送られてきたチャット相手の詳細を定義する
     private void loadReceiverDetails() {
-        Log.i("fugafuga", "loadReceiverDetails()");
         /* getSerializableExtra
         インテントから拡張データを取得する。
         @param name 希望する項目の名前。
@@ -132,7 +128,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setListener() {
-        Log.i("fugafuga", "setListener()");
         binding.backBtn.setOnClickListener(v -> finish());
         binding.sendBtn.setOnClickListener(v -> sendMessage());
     }
@@ -144,13 +139,10 @@ public class ChatActivity extends AppCompatActivity {
         NetworkInfo info = cm.getActiveNetworkInfo();
         if(info != null && info.isAvailable()) {
             // 接続している
-            Log.i("インターネット", "接続");
         } else {
             // 接続されていない
-            Log.i("インターネット", "接続していない");
 
             AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
-//        builder.setIcon(); TODO アプリのアイコン
             builder.setTitle("確認");
             builder.setMessage("インターネット接続を確認してください。");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -177,8 +169,6 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-
-        Log.i("fugafuga", "sendMessage()");
         // messageを格納するHashMap
         HashMap<String, Object> message = new HashMap<>();
         // SENDER_IDがキー、shardPreferenceのKEY_USER_IDがバリュー
@@ -251,7 +241,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendNotification(String messageBody) {
-        Log.i("testNotificationBody", "body : " + messageBody);
         ApiClient.getClient().create(ApiService.class).sendMessage(
                 Constants.getRemoteMsgHeaders(),
                 messageBody
@@ -287,13 +276,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private String getReadableDateTime(Date date) {
-        Log.i("fugafuga", "getReadableDateTime()");
         return new SimpleDateFormat("yyyy年 MM月 dd日 HH:mm:ss", Locale.getDefault()).format(date);
     }
 
     // もしかして、初めて会話した時のアイコンとかの情報をINSERTしてる？？？チャット情報の親玉？
     private void addConversion(HashMap<String, Object> conversion) {
-        Log.i("fugafuga", "addConversion()");
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .add(conversion)
                 .addOnSuccessListener(documentReference -> conversionId = documentReference.getId());
@@ -301,7 +288,6 @@ public class ChatActivity extends AppCompatActivity {
 
     // 最後の会話と、時刻を更新している
     private void updateConversion(String message) {
-        Log.i("fugafuga", "updateConversion()");
         DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversionId);
         documentReference.update(
                 Constants.KEY_LAST_MESSAGE, message,
@@ -310,12 +296,10 @@ public class ChatActivity extends AppCompatActivity {
                 Constants.LAST_RECEIVED_MESSAGE_USERID, receiverUser.id,
                 Constants.KEY_IS_READ, false
         );
-        Log.i("fugafugaa", "自分のID  " + preferenceManager.getString(Constants.KEY_USER_ID));
     }
 
     // リッスンする関数？
     private void listenMessages() {
-        Log.i("fugafuga", "listenMessages()");
         database.collection(Constants.KEY_COLLECTION_CHAT)// 自分が送った
                 // 送り主IDが自分のIDと同じ
                 .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
@@ -334,15 +318,12 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
 
-        Log.i("happyNewYear", "チャットのイベントリスナー呼ばれたよ");
-
         // リアルタイムに既読管理
         // もし、画面を起動していたら、onResumeを呼び出す。
         if (isOpenView) {
             onResume();
         }
 
-        Log.i("fugafuga", "EventListener<>");
         // エラーがあればreturn
         if(error != null) {
             return;
@@ -381,9 +362,6 @@ public class ChatActivity extends AppCompatActivity {
                      */
                     //
                     if(parseDate(chatMessage.getDateTime()).compareTo(parseDate(preferenceManager.getString(Constants.DB_UPDATED_DATE))) >= 0) {
-                        Log.i("happyNewYear", "めっせーじ：" + chatMessage.getDateTime());
-                        Log.i("happyNewYear", "ぷりふぁれんす：" + preferenceManager.getString(Constants.DB_UPDATED_DATE));
-                        Log.i("happyNewYear", "内容：" + chatMessage.getMessage() + "\n--------------------");
                         chatDataOpenHelper.insertMessageData(
                                 receiverUser.id,
                                 documentChange.getDocument().getString(Constants.KEY_SENDER_ID),
@@ -445,7 +423,6 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void checkForConversion() {
-        Log.i("fugafuga", "checkForConversion()");
         if(chatMessages.size() != 0) {// チャットをしていたら
             checkForConversionRemotely(
                     preferenceManager.getString(Constants.KEY_USER_ID),
@@ -460,7 +437,6 @@ public class ChatActivity extends AppCompatActivity {
 
     // senderIdをreceiverIDから変化を監視するListenerを定義
     private void checkForConversionRemotely(String senderId, String receiverId) {
-        Log.i("fugafuga", "checkForConversionRemotely()");
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .whereEqualTo(Constants.KEY_SENDER_ID, senderId)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverId)
@@ -470,7 +446,6 @@ public class ChatActivity extends AppCompatActivity {
 
     // リスナーの内容？？
     private final OnCompleteListener<QuerySnapshot> conversionOnCompleteListener = task -> {
-        Log.i("fugafuga", "OnCompleteListener<>");
         if(task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {// 成功かつ、データがあるかつ、データsizeが0以上のとき、
             /**
              * DocumentSnapshotには、Cloud Firestoreデータベース内のドキュメントから読み取られたデータが含まれています。データは、getData() または get(String) メソッドで抽出することができます。
@@ -486,8 +461,6 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("fugafuga", "onResume()");
-
         isOpenView = true;
 
         listenAvailabilityOfReceiver();
@@ -509,11 +482,9 @@ public class ChatActivity extends AppCompatActivity {
                         // 既読がtrueだったら、、、、、
                         for(DocumentSnapshot documentSnapshot : value.getDocuments()) {
                             if(Boolean.TRUE.equals(documentSnapshot.getBoolean(Constants.KEY_IS_READ))) {
-                                Log.i("kidoku", "VISIBLE    \n" + documentSnapshot.getString(Constants.KEY_SENDER_NAME));
                                 binding.alreadyLead.setVisibility(View.VISIBLE);
                                 break;
                             } else {
-                                Log.i("kidoku", "GONE    \n" + documentSnapshot.getString(Constants.KEY_SENDER_NAME));
                                 binding.alreadyLead.setVisibility(View.GONE);
 //                                break;
                             }
@@ -575,7 +546,6 @@ public class ChatActivity extends AppCompatActivity {
 
     // 画面が表示（@onResume）された時に呼ばれる。
     private void listenAvailabilityOfReceiver() {
-        Log.i("fugafuga", "listenAvailabilityOfreceiver()");
         /* document
         このコレクション内の指定されたパスにあるドキュメントを参照する DocumentReference のインスタンスを取得する。
         パラメータは以下のとおりです。
@@ -620,7 +590,6 @@ public class ChatActivity extends AppCompatActivity {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年 MM月 dd日 HH:mm:ss");
             date = sdf.parse(dateStr);
-//            Log.i("dateInfo", String.valueOf(date));
             return date;
 
         } catch (ParseException e ) {

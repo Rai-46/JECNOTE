@@ -41,7 +41,6 @@ public class SearchUserAdapter extends ArrayAdapter<StudentUser> {
         if(user != null) {
             ImageView userImage = (ImageView) convertView.findViewById(R.id.userImage);
             new DownloadUserImage(userImage).execute(user.userImage);
-            Log.i("ユーザアイコン", user.userImage);
 
             TextView userName = (TextView) convertView.findViewById(R.id.userDisplayName);
             userName.setText(user.userDisplayName);
@@ -72,7 +71,6 @@ public class SearchUserAdapter extends ArrayAdapter<StudentUser> {
                 InputStream in = new java.net.URL(urlDisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
             return mIcon11;

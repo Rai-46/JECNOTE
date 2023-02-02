@@ -58,7 +58,6 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         // setDataにchatDataを渡す（その中でデータをsetしてもらう）
         holder.setData(chatMessage.get(position));
         // why教員アカウントの際に、ここのchatMessageにデータが十分に入っていない -> 無理やり解決
-//        Log.i("testtest", "onBIndVIewHolder   name   " + chatMessage.get(position).firstReceiverName);
     }
 
     @Override
@@ -81,11 +80,6 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             // 相手の画像をセット
             new DownloadUserImage(binding.recentUserImage).execute(chatMessage.getFirstReceiverImage());
 
-            Log.i("arere", "kiteruyo");
-
-
-
-
             // isRead は trueが既読した falseが未読
 
             /*
@@ -94,19 +88,13 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
              */
 
 
-
-            Log.i("FirestoreCheck", "-------------------------------------");
-
                 if (preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.getLastSenderID())) {
-                    Log.i("FirestoreCheck", "自分ラストメッセージ");
 
                     binding.resentMessage.setText("");
                     binding.messageBatch.setVisibility(View.GONE);
                     preferenceManager.putBoolean(Constants.FCM_RECEIVED_MESSAGE, false);
                 } else {
-                    Log.i("FirestoreCheck", "相手ラストメッセージ");
                     if(!chatMessage.getIsRead()) {
-                        Log.i("FirestoreCheck", "isRead false");
 
                         binding.resentMessage.setText("新着メッセージがあります。");
 
@@ -124,18 +112,12 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             // もし、最初の受け取り主が自分だったら、表示するのは、firstSenderName
             // else 最初の受け取り主が相手だったら、表示するのは、firstReceiverName
             if (!preferenceManager.getString(Constants.KEY_USER_ID).equals(chatMessage.getConversionId())) {
-                Log.i("testtest", "84");
-                Log.i("FirestoreCheck", "" + chatMessage.getFirstReceiverName());
                 binding.recentUserName.setText(chatMessage.getFirstReceiverName());
 
             } else {
-                Log.i("testtest", "87");
-                Log.i("FirestoreCheck", "" + chatMessage.getFirstSenderId());
                 binding.recentUserName.setText(chatMessage.getFirstSenderName());
             }
 
-
-            Log.i("FirestoreCheck", "-------------------------------------");
 
             // タッチイベントを定義?
             binding.getRoot().setOnClickListener(v -> {
@@ -174,7 +156,6 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
             return mIcon11;

@@ -3,6 +3,7 @@ package jp.ac.jec.cm0146.jecnote.network;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -41,8 +42,6 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
 
             resStr = inputStreamToString(con.getInputStream());
 
-            Log.i("resStr", String.valueOf(resStr.equals("null")));
-
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -53,7 +52,6 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
         }
         // JSON
         String html = JsonHelper.parseHTML(resStr);
-        Log.i("getHTML", html);
         return html;
     }
 
@@ -80,6 +78,9 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
         settings.setBuiltInZoomControls(true);
         wv.loadDataWithBaseURL(null, replace, "text/html", "UTF8", null);
 
+        binding.progressBar.setVisibility(View.GONE);
+        binding.webView.setVisibility(View.VISIBLE);
+
     }
 
     private String protectHTML(String html) {
@@ -89,8 +90,6 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
         Pattern p = Pattern.compile(pattern); // 正規表現をコンパイルする？
         Matcher m = p.matcher(html); // コンパイルされたやつをhtmlから探す
 
-        Log.i("もと", html);
-
         while (m.find()) {
             list.add(m.group());
         }
@@ -99,9 +98,6 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
         list.toArray(images);
 
         html = html.replaceAll(pattern, "<>");
-
-        Log.i("この時点", html);
-
         html = html.replace("span { color: red; } " , "??");
 
         if(!"".equals(keyword)) {
@@ -116,7 +112,6 @@ public class AsyncHTMLRequest extends AsyncTask<Uri.Builder, Void, String> {
         }
 
         html = html.replace("??", "span { color: red; } ");
-        Log.i("完成", html);
 
         return html;
     }

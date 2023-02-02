@@ -41,7 +41,6 @@ public class AsyncNewsDataRequest extends AsyncTask<Uri.Builder, Void, NewsDataI
 
             resStr = inputStreamToString(con.getInputStream());
 
-            Log.i("resStr", String.valueOf(resStr.equals("null")));
 
         } catch (Exception e) {
             e.printStackTrace();

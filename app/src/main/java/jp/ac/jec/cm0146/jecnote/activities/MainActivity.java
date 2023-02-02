@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
                 InputStream in = new java.net.URL(urlDisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
             return mIcon11;
