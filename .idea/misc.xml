@@ -19,7 +19,7 @@
         <entry key="app/src/main/res/drawable/sendmessage_background.xml" value="0.2215" />
         <entry key="app/src/main/res/drawable/user_icon_background.xml" value="0.121" />
         <entry key="app/src/main/res/font/zenmarugothic_medium.xml" value="0.1984375" />
-        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.24864501953125" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.3448275862068966" />
         <entry key="app/src/main/res/layout/activity_chat_list.xml" value="0.14976654052734376" />
         <entry key="app/src/main/res/layout/activity_guide_view.xml" value="0.15896739130434784" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1996337890625" />
