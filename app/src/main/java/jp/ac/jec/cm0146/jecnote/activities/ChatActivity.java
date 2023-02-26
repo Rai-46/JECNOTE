@@ -279,7 +279,7 @@ public class ChatActivity extends AppCompatActivity {
         return new SimpleDateFormat("yyyy年 MM月 dd日 HH:mm:ss", Locale.getDefault()).format(date);
     }
 
-    // もしかして、初めて会話した時のアイコンとかの情報をINSERTしてる？？？チャット情報の親玉？
+    // チャット情報の親玉
     private void addConversion(HashMap<String, Object> conversion) {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .add(conversion)
@@ -298,14 +298,14 @@ public class ChatActivity extends AppCompatActivity {
         );
     }
 
-    // リッスンする関数？
+    // リッスンする関数
     private void listenMessages() {
         database.collection(Constants.KEY_COLLECTION_CHAT)// 自分が送った
                 // 送り主IDが自分のIDと同じ
                 .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 // 受け取り主IDが自分の
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser.id)
-                // リスナーを定義しているのでしょうか？多分？変更したら動く的な？Swiftのcombine???
+                // リスナーを定義
                 .addSnapshotListener(eventListener);
         database.collection(Constants.KEY_COLLECTION_CHAT)// 自分に送られた
                 .whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)

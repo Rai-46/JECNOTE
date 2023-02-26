@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bgcolor"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MapsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
@@ -16,17 +16,25 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
+            <ImageButton
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_baseline_arrow_back_24"
+                tools:ignore="ContentDescription"/>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
                 android:textSize="25sp"
                 android:layout_gravity="center"
-                android:text="メインメニュー"
+                android:text="マップ"
                 android:fontFamily="@font/zenmarugothic_medium"
                 android:textColor="@color/white"/>
 
@@ -36,27 +44,26 @@
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/sendChatActivity"
+                android:id="@+id/searchUsers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginEnd="20dp"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_outline_chat_bubble_outline_24"
+                android:src="@drawable/ic_baseline_person_add_24"
                 tools:ignore="ContentDescription"/>
 
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
+<!--    石塚Tに教えていただきました-->
 
-    <ListView
-        android:id="@+id/menuItemList"
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:divider="@null"
-        android:dividerHeight="20sp" />
-
+        android:layout_height="match_parent" />
 
 </LinearLayout>

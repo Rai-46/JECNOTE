@@ -51,6 +51,8 @@ public class SchoolGuideActivity extends AppCompatActivity implements SchoolGuid
         uriBuilder.path("jecGuide/outputHTML.php");
         uriBuilder.appendQueryParameter("keyword", keyword);
 
+        Log.i("URL", uriBuilder.toString());
+
         AsyncGuideListRequest req = new AsyncGuideListRequest(this);
         req.execute(uriBuilder);
 

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     private static final int MENU_GUIDE = 1;
     private static final int MENU_NEWS = 2;
+    private static final int MENU_MAP = 3;
 
 
 
@@ -65,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         });
 
 
+
+
     }
 
 //    public Context getContext() {
@@ -74,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
     private void setList() {
         ArrayList<MenuItems> items = new ArrayList<>(Arrays.asList(
                 new MenuItems().setId(MENU_GUIDE).setMenuTitle("学園生活ガイド").setMenuImage(R.drawable.lifeguide_2019),
-                new MenuItems().setId(MENU_NEWS).setMenuTitle("学校からの連絡").setMenuImage(R.drawable.twitter_kakouzumi)
+                new MenuItems().setId(MENU_NEWS).setMenuTitle("学校からの連絡").setMenuImage(R.drawable.twitter_kakouzumi),
+                new MenuItems().setId(MENU_MAP).setMenuTitle("学校所在地").setMenuImage(R.drawable.schoolmap)
         ));
         MenuListAdapter adapter = new MenuListAdapter(getApplicationContext(), this);
         for (MenuItems data: items) {
@@ -84,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
 
     }
 
-    // TODO: もしかしたら、MainActivityに移動させるかも？？？
+
     private void getToken() {
         // 通知に必要なFCMトークン
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateTokens);
@@ -120,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityListe
         // Intentで学校連絡Viewに遷移
         if(menuItems.getId() == MENU_NEWS) {
             Intent intent = new Intent(getApplicationContext(), SchoolNewsActivity.class);
+            startActivity(intent);
+        }
+        if(menuItems.getId() == MENU_MAP) {
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
             startActivity(intent);
         }
     }

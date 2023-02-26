@@ -29,4 +29,5 @@
         <item>YJ</item>
         <item>YK</item>
     </string-array>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
